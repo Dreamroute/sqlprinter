@@ -1,6 +1,6 @@
-# MyBatis乐观锁插件 #
+# MyBatis SQL语句打印插件 #
 
-### MyBatis Optimistic Locker Plugin ###
+### MyBatis Simple SQL Print Plugin ###
 
 [![Build Status](https://travis-ci.org/mybatis/mybatis-3.svg?branch=master)](https://travis-ci.org/mybatis/mybatis-3)
 [![Coverage Status](https://coveralls.io/repos/mybatis/mybatis-3/badge.svg?branch=master&service=github)](https://coveralls.io/github/mybatis/mybatis-3?branch=master)
@@ -15,7 +15,7 @@
 ----------
 
 ## Document: ##
-En Doc: 
+En Doc: 暂无
 	
 ----------
 

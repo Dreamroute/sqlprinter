@@ -1,4 +1,4 @@
-# MyBatis SQL语句打印插件 #
+# sqlprinter SQL打印插件#
 
 ### MyBatis Simple SQL Print Plugin ###
 

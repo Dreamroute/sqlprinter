@@ -35,6 +35,8 @@ import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
 
+import com.mook.sqlprinter.util.PluginUtil;
+
 /**
  * print imple sql
  * 
@@ -63,7 +65,10 @@ public class SqlPrinter implements Interceptor {
 	}
 
 	private void printSql(Invocation invocation) {
-		MetaObject handler = SystemMetaObject.forObject(invocation.getTarget());
+		Object parameterHander =  invocation.getTarget();
+		Object target = PluginUtil.processTarget(parameterHander);
+		
+		MetaObject handler = SystemMetaObject.forObject(target);
 		Object parameterObject = handler.getValue("parameterObject");
 		BoundSql boundSql = (BoundSql) handler.getValue("boundSql");
 		String originalSql = boundSql.getSql();

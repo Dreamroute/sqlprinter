@@ -7,6 +7,7 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -55,6 +56,12 @@ public class UserMapperTest {
 	public void selectAllUserTest() {
 		List<User> result = userMapper.selectAllUser();
 		System.err.println(result);
+	}
+	
+	@Test
+	public void selectUserByNameAndPasswordTest() {
+		User user = userMapper.selectUserByNameAndPassword("nn", "nn");
+		Assert.assertEquals(user.getName(), "nn");
 	}
 }
 

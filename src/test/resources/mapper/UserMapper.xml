@@ -24,4 +24,8 @@
 		select * from smart_user
 	</select>
 	
+	<select id="selectUserByNameAndPassword" resultType="user">
+		select * from smart_user t where t.name = #{name} and t.password = #{password}		
+	</select>
+	
 </mapper>

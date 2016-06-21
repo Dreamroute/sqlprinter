@@ -38,7 +38,7 @@ import org.apache.ibatis.reflection.SystemMetaObject;
 import com.mook.sqlprinter.util.PluginUtil;
 
 /**
- * print imple sql
+ * print simple sql
  * 
  * @author 342252328@qq.com
  * @date 2016-06-14

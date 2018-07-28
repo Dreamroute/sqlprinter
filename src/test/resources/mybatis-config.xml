@@ -9,7 +9,7 @@
 	</typeAliases>
 		
 	<plugins>
-		<plugin interceptor="com.mook.sqlprinter.interceptor.SqlPrinter">
+		<plugin interceptor="com.github.dreamroute.sqlprinter.interceptor.SqlPrinter">
 			<!-- the type to print the sql in console, if 'debug', that use log4j to print, else if 'error', that use System.err.println to print, debug default -->
 			<property name="type" value="error"/>
 		</plugin>

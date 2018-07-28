@@ -16,7 +16,7 @@
 ``` javascript
 <dependency>
     <groupId>com.github.dreamroute</groupId>
-    <artifactId>locker</artifactId>
+    <artifactId>sqlprinter</artifactId>
     <version>newest version</version>
 </dependency>
 ```

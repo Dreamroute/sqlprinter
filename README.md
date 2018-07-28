@@ -12,9 +12,18 @@
 
 ![mybatis](http://mybatis.github.io/images/mybatis-logo.png)
 
+### Get Start...
+``` javascript
+<dependency>
+    <groupId>com.github.dreamroute</groupId>
+    <artifactId>locker</artifactId>
+    <version>newest version</version>
+</dependency>
+```
+
 ----------
 
-## Document: ##
+## 0.Document: ##
 En Doc: 暂无
 	
 ----------

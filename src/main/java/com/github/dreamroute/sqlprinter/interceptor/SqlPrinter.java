@@ -54,77 +54,78 @@ import com.github.dreamroute.sqlprinter.util.PluginUtil;
  * @since JDK1.7
  *
  */
-@Intercepts({ @Signature(type = ParameterHandler.class, method = "setParameters", args = { PreparedStatement.class }) })
+@Intercepts({@Signature(type = ParameterHandler.class, method = "setParameters", args = {PreparedStatement.class})})
 public class SqlPrinter implements Interceptor {
-	
-	private static final Log log = LogFactory.getLog(SqlPrinter.class);
-	private Properties props = new Properties();
 
-	@Override
-	public Object intercept(Invocation invocation) throws Exception {
-		
-		// invoke the original setParameters method
-		Object result = invocation.proceed();
-		
-		// Print the simple SQL
-		printSql(invocation);
-		
-		return result;
-	}
+    private static final Log log = LogFactory.getLog(SqlPrinter.class);
+    private Properties props = new Properties();
 
-	private void printSql(Invocation invocation) {
-		Object parameterHander =  invocation.getTarget();
-		Object target = PluginUtil.processTarget(parameterHander);
-		
-		MetaObject handler = SystemMetaObject.forObject(target);
-		Object parameterObject = handler.getValue("parameterObject");
-		BoundSql boundSql = (BoundSql) handler.getValue("boundSql");
-		String originalSql = boundSql.getSql();
-		StringBuilder sb = new StringBuilder(originalSql);
+    @Override
+    public Object intercept(Invocation invocation) throws Exception {
 
-		MappedStatement mappedStatement = (MappedStatement) handler.getValue("mappedStatement");
-		ErrorContext.instance().activity("setting parameters").object(mappedStatement.getParameterMap().getId());
-		List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
-		if (parameterMappings != null) {
-			for (int i = 0; i < parameterMappings.size(); i++) {
-				ParameterMapping parameterMapping = parameterMappings.get(i);
-				if (parameterMapping.getMode() != ParameterMode.OUT) {
-					Object value;
-					String propertyName = parameterMapping.getProperty();
-					if (boundSql.hasAdditionalParameter(propertyName)) {
-						value = boundSql.getAdditionalParameter(propertyName);
-					} else if (parameterObject == null) {
-						value = null;
-					} else if (mappedStatement.getConfiguration().getTypeHandlerRegistry().hasTypeHandler(parameterObject.getClass())) {
-						value = parameterObject;
-					} else {
-						MetaObject metaObject = mappedStatement.getConfiguration().newMetaObject(parameterObject);
-						value = metaObject.getValue(propertyName);
-					}
-					int pos = sb.indexOf("?");
-					sb.replace(pos, pos + 1, String.valueOf(value));
-				}
-			}
-		}
-		
-		String type = props.getProperty("type", "debug");
-		if("error".equals(type)) {
-			System.err.println("==>  Simple Sql: " + sb.toString());
-		} else {
-		if (log.isDebugEnabled()) log.debug("==>  Print simple sql: " + sb.toString());
-		}
-	}
+        // invoke the original setParameters method
+        Object result = invocation.proceed();
 
-	@Override
-	public Object plugin(Object target) {
-		if (target instanceof ParameterHandler) {
-			target = Plugin.wrap(target, this);
-		}
-		return target;
-	}
+        // Print the simple SQL
+        printSql(invocation);
 
-	@Override
-	public void setProperties(Properties properties) {
-		props = properties;
-	}
+        return result;
+    }
+
+    private void printSql(Invocation invocation) {
+        Object parameterHander = invocation.getTarget();
+        Object target = PluginUtil.processTarget(parameterHander);
+
+        MetaObject handler = SystemMetaObject.forObject(target);
+        Object parameterObject = handler.getValue("parameterObject");
+        BoundSql boundSql = (BoundSql) handler.getValue("boundSql");
+        String originalSql = boundSql.getSql();
+        StringBuilder sb = new StringBuilder(originalSql);
+
+        MappedStatement mappedStatement = (MappedStatement) handler.getValue("mappedStatement");
+        ErrorContext.instance().activity("setting parameters").object(mappedStatement.getParameterMap().getId());
+        List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
+        if (parameterMappings != null) {
+            for (int i = 0; i < parameterMappings.size(); i++) {
+                ParameterMapping parameterMapping = parameterMappings.get(i);
+                if (parameterMapping.getMode() != ParameterMode.OUT) {
+                    Object value;
+                    String propertyName = parameterMapping.getProperty();
+                    if (boundSql.hasAdditionalParameter(propertyName)) {
+                        value = boundSql.getAdditionalParameter(propertyName);
+                    } else if (parameterObject == null) {
+                        value = null;
+                    } else if (mappedStatement.getConfiguration().getTypeHandlerRegistry().hasTypeHandler(parameterObject.getClass())) {
+                        value = parameterObject;
+                    } else {
+                        MetaObject metaObject = mappedStatement.getConfiguration().newMetaObject(parameterObject);
+                        value = metaObject.getValue(propertyName);
+                    }
+                    int pos = sb.indexOf("?");
+                    sb.replace(pos, pos + 1, String.valueOf(value));
+                }
+            }
+        }
+
+        String type = props.getProperty("type", "debug");
+        if ("error".equals(type)) {
+            System.err.println("==>  Simple Sql: " + sb.toString());
+        } else {
+            if (log.isDebugEnabled())
+                log.debug("==>  Print simple sql: " + sb.toString());
+        }
+    }
+
+    @Override
+    public Object plugin(Object target) {
+        if (target instanceof ParameterHandler) {
+            target = Plugin.wrap(target, this);
+        }
+        return target;
+    }
+
+    @Override
+    public void setProperties(Properties properties) {
+        props = properties;
+    }
 }

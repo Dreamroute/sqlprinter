@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.dreamroute</groupId>
 	<artifactId>sqlprinter</artifactId>
-	<version>1.2-RELEASE</version>
+	<version>1.4-RELEASE</version>
 
 	<name>sqlprinter</name>
 	<url>https://github.com/Dreamroute/sqlprinter</url>

@@ -109,7 +109,7 @@ public class SqlPrinter implements Interceptor {
 
         String type = props.getProperty("type", "debug");
         if ("error".equals(type)) {
-            log.error("\"==>  Simple Sql: \" + sb.toString()");
+            log.error("==>  Simple Sql:"  + sb.toString());
         }
     }
 

@@ -29,8 +29,6 @@ import java.util.Properties;
 
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ParameterMapping;
@@ -42,6 +40,8 @@ import org.apache.ibatis.plugin.Plugin;
 import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.dreamroute.sqlprinter.util.PluginUtil;
 
@@ -56,8 +56,9 @@ import com.github.dreamroute.sqlprinter.util.PluginUtil;
  */
 @Intercepts({@Signature(type = ParameterHandler.class, method = "setParameters", args = {PreparedStatement.class})})
 public class SqlPrinter implements Interceptor {
+    
+    private static Logger logger = LoggerFactory.getLogger(SqlPrinter.class);
 
-    private static final Log log = LogFactory.getLog(SqlPrinter.class);
     private Properties props = new Properties();
 
     @Override
@@ -102,14 +103,14 @@ public class SqlPrinter implements Interceptor {
                         value = metaObject.getValue(propertyName);
                     }
                     int pos = sb.indexOf("?");
-                    sb.replace(pos, pos + 1, String.valueOf(value));
+                    sb.replace(pos, pos + 1, "{" + String.valueOf(value) + "}");
                 }
             }
         }
 
         String type = props.getProperty("type", "debug");
         if ("error".equals(type)) {
-            log.error("==>  Simple Sql:"  + sb.toString());
+            logger.info("[Sqlprinter插件打印SQL]: {}", sb.toString());
         }
     }
 

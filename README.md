@@ -45,7 +45,7 @@ En Doc: 暂无
 
 	<plugins>
 		<plugin interceptor="com.mook.sqlprinter.interceptor.SqlPrinter">
-			<!-- if type is 'error', sql will be print in console, otherwise will not be print in console. -->
+			<!-- type等于error，控制台打印sql，不等于error则不打印sql，不填表示不打印 -->
 			<property name="type" value="error"/>
 		</plugin>
 	</plugins>

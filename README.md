@@ -45,7 +45,7 @@ En Doc: 暂无
 
 	<plugins>
 		<plugin interceptor="com.mook.sqlprinter.interceptor.SqlPrinter">
-			<!-- the type to print the sql in console, if 'debug', that use log4j to print, else if 'error', that use System.err.println to print, debug default -->
+			<!-- if type is 'error', sql will be print in console, otherwise will not be print in console. -->
 			<property name="type" value="error"/>
 		</plugin>
 	</plugins>
@@ -55,7 +55,7 @@ En Doc: 暂无
 ### 3. 效果： ###
 > 之前：**insert into xxx (name, password) values (?, ?)**
 
-> 之后：**insert into xxx (name, password) values (tom, 123456)**
+> 之后：**insert into xxx (name, password) values ({tom}, {123456})**
 
 ----------
 

@@ -25,6 +25,7 @@ package com.github.dreamroute.sqlprinter.interceptor;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 
 import org.apache.ibatis.executor.ErrorContext;
@@ -56,7 +57,7 @@ import com.github.dreamroute.sqlprinter.util.PluginUtil;
  */
 @Intercepts({@Signature(type = ParameterHandler.class, method = "setParameters", args = {PreparedStatement.class})})
 public class SqlPrinter implements Interceptor {
-    
+
     private static Logger logger = LoggerFactory.getLogger(SqlPrinter.class);
 
     private Properties props = new Properties();
@@ -74,42 +75,42 @@ public class SqlPrinter implements Interceptor {
     }
 
     private void printSql(Invocation invocation) {
-        Object parameterHander = invocation.getTarget();
-        Object target = PluginUtil.processTarget(parameterHander);
+        String type = props.getProperty("type", "debug");
+        if (Objects.equals("error", type)) {
+            Object parameterHander = invocation.getTarget();
+            Object target = PluginUtil.processTarget(parameterHander);
 
-        MetaObject handler = SystemMetaObject.forObject(target);
-        Object parameterObject = handler.getValue("parameterObject");
-        BoundSql boundSql = (BoundSql) handler.getValue("boundSql");
-        String originalSql = boundSql.getSql();
-        StringBuilder sb = new StringBuilder(originalSql);
+            MetaObject handler = SystemMetaObject.forObject(target);
+            Object parameterObject = handler.getValue("parameterObject");
+            BoundSql boundSql = (BoundSql) handler.getValue("boundSql");
+            String originalSql = boundSql.getSql();
+            StringBuilder sb = new StringBuilder(originalSql);
 
-        MappedStatement mappedStatement = (MappedStatement) handler.getValue("mappedStatement");
-        ErrorContext.instance().activity("setting parameters").object(mappedStatement.getParameterMap().getId());
-        List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
-        if (parameterMappings != null) {
-            for (int i = 0; i < parameterMappings.size(); i++) {
-                ParameterMapping parameterMapping = parameterMappings.get(i);
-                if (parameterMapping.getMode() != ParameterMode.OUT) {
-                    Object value;
-                    String propertyName = parameterMapping.getProperty();
-                    if (boundSql.hasAdditionalParameter(propertyName)) {
-                        value = boundSql.getAdditionalParameter(propertyName);
-                    } else if (parameterObject == null) {
-                        value = null;
-                    } else if (mappedStatement.getConfiguration().getTypeHandlerRegistry().hasTypeHandler(parameterObject.getClass())) {
-                        value = parameterObject;
-                    } else {
-                        MetaObject metaObject = mappedStatement.getConfiguration().newMetaObject(parameterObject);
-                        value = metaObject.getValue(propertyName);
+            MappedStatement mappedStatement = (MappedStatement) handler.getValue("mappedStatement");
+            ErrorContext.instance().activity("setting parameters").object(mappedStatement.getParameterMap().getId());
+            List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
+            if (parameterMappings != null) {
+                for (int i = 0; i < parameterMappings.size(); i++) {
+                    ParameterMapping parameterMapping = parameterMappings.get(i);
+                    if (parameterMapping.getMode() != ParameterMode.OUT) {
+                        Object value;
+                        String propertyName = parameterMapping.getProperty();
+                        if (boundSql.hasAdditionalParameter(propertyName)) {
+                            value = boundSql.getAdditionalParameter(propertyName);
+                        } else if (parameterObject == null) {
+                            value = null;
+                        } else if (mappedStatement.getConfiguration().getTypeHandlerRegistry().hasTypeHandler(parameterObject.getClass())) {
+                            value = parameterObject;
+                        } else {
+                            MetaObject metaObject = mappedStatement.getConfiguration().newMetaObject(parameterObject);
+                            value = metaObject.getValue(propertyName);
+                        }
+                        int pos = sb.indexOf("?");
+                        sb.replace(pos, pos + 1, "{" + String.valueOf(value) + "}");
                     }
-                    int pos = sb.indexOf("?");
-                    sb.replace(pos, pos + 1, "{" + String.valueOf(value) + "}");
                 }
             }
-        }
 
-        String type = props.getProperty("type", "debug");
-        if ("error".equals(type)) {
             logger.info("[Sqlprinter插件打印SQL]: {}", sb.toString());
         }
     }

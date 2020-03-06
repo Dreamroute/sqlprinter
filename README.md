@@ -31,10 +31,30 @@ En Doc: 暂无
 	描述：本插件主要是为了解决在开发调试过程中MyBatis在eclipse/idea控制台输出的sql中参数和sql语句分离的问题。生产环境一般不需要此插件。
 
 ----------
-### 1. 使用方式：在mybatis配置文件中加入如下配置，就完成了。 ###
+### 1. 使用方式：传统Spring项目：在mybatis配置文件中加入如下配置，就完成了。 ###
 	<plugins>
 		<plugin interceptor="com.mook.sqlprinter.interceptor.SqlPrinter"/>
 	</plugins>
+### 2. Spring Boot项目：
+	@Configuration
+	public class SqlPrinterConfig {
+
+	    @Value("${sqlType:debug}")
+	    private String sqlType;
+
+	    /**
+	     * SQL打印，将sql中的问号（？）替换成真实值
+	     */
+	    @Bean
+	    public SqlPrinter printer() {
+		SqlPrinter printer = new SqlPrinter();
+		Properties props = new Properties();
+		props.setProperty("type", sqlType);
+		printer.setProperties(props);
+		return printer;
+	    }
+
+	}
 
 ----------
 

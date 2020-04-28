@@ -122,7 +122,7 @@ public class SqlPrinter implements Interceptor {
                         sb.replace(pos, pos + 1, String.valueOf(value));
                     }
                 }
-                String result = sb.toString().replace("?", String.valueOf(versionValue));
+                String result = sb.toString().replace("version = ?", "version = " + versionValue);
                 logger.info("[Sqlprinter插件打印SQL]: {}", result);
             }
 

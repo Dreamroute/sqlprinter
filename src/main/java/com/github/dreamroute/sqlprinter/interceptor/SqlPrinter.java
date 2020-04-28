@@ -90,6 +90,7 @@ public class SqlPrinter implements Interceptor {
             ErrorContext.instance().activity("setting parameters").object(mappedStatement.getParameterMap().getId());
             List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
             if (parameterMappings != null) {
+                long versionValue = 0;
                 for (int i = 0; i < parameterMappings.size(); i++) {
                     ParameterMapping parameterMapping = parameterMappings.get(i);
                     if (parameterMapping.getMode() != ParameterMode.OUT) {
@@ -105,13 +106,26 @@ public class SqlPrinter implements Interceptor {
                             MetaObject metaObject = mappedStatement.getConfiguration().newMetaObject(parameterObject);
                             value = metaObject.getValue(propertyName);
                         }
+                        
+                        // 将set中的version减1得到where后面的version的值
+                        if (Objects.equals(propertyName, "version")) {
+                            versionValue = (long) value - 1;
+                        }
+                        
+                        // sql中非数字类型的值加单引号
+                        if (!(value instanceof Number)) {
+                            value = "'" + value + "'";
+                        }
+                        
+                        // 替换问号
                         int pos = sb.indexOf("?");
-                        sb.replace(pos, pos + 1, "{" + String.valueOf(value) + "}");
+                        sb.replace(pos, pos + 1, String.valueOf(value));
                     }
                 }
+                String result = sb.toString().replace("?", String.valueOf(versionValue));
+                logger.info("[Sqlprinter插件打印SQL]: {}", result);
             }
 
-            logger.info("[Sqlprinter插件打印SQL]: {}", sb.toString());
         }
     }
 

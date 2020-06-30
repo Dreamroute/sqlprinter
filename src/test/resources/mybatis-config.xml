@@ -11,7 +11,7 @@
 	<plugins>
 		<plugin interceptor="com.github.dreamroute.sqlprinter.interceptor.SqlPrinter">
 			<!-- the type to print the sql in console, if 'debug', that use log4j to print, else if 'error', that use System.err.println to print, debug default -->
-			<property name="type" value="error"/>
+			<property name="show" value="true"/>
 		</plugin>
 	</plugins>
 	

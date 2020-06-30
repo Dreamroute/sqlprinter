@@ -75,8 +75,8 @@ public class SqlPrinter implements Interceptor {
     }
 
     private void printSql(Invocation invocation) {
-        String type = props.getProperty("type", "debug");
-        if (Objects.equals("error", type)) {
+        String show = props.getProperty("sql-show", "true");
+        if (Boolean.valueOf(show)) {
             Object parameterHander = invocation.getTarget();
             Object target = PluginUtil.processTarget(parameterHander);
 

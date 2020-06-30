@@ -9,7 +9,7 @@
 <dependency>
     <groupId>com.github.dreamroute</groupId>
     <artifactId>sqlprinter</artifactId>
-    <version>newest version</version>
+    <version>latest version</version>
 </dependency>
 ```
 
@@ -20,7 +20,7 @@ En Doc: 暂无
 	
 ----------
 
-	描述：本插件主要是为了解决在开发调试过程中MyBatis在eclipse/idea控制台输出的sql中参数和sql语句分离的问题。生产环境一般不需要此插件。
+	描述：本插件主要是为了解决在开发调试过程中MyBatis在eclipse/idea控制台输出的sql中参数和sql语句分离的问题。生产环境一般不需要此插件（设置成false即可）。
 
 ----------
 ### 1. 使用方式：传统Spring项目：在mybatis配置文件中加入如下配置，就完成了。 ###
@@ -31,7 +31,7 @@ En Doc: 暂无
 	@Configuration
 	public class SqlPrinterConfig {
 
-	    @Value("${sqlType:debug}")
+	    @Value("${sql-show:true}")
 	    private String sqlType;
 
 	    /**
@@ -57,8 +57,8 @@ En Doc: 暂无
 
 	<plugins>
 		<plugin interceptor="com.mook.sqlprinter.interceptor.SqlPrinter">
-			<!-- type等于error，控制台打印sql，不等于error则不打印sql，不填表示不打印 -->
-			<property name="type" value="error"/>
+			<!-- sql-show不填则默认是true，如果不需要打印sql设置成false -->
+			<property name="sql-show" value="true"/>
 		</plugin>
 	</plugins>
 
@@ -67,7 +67,7 @@ En Doc: 暂无
 ### 3. 效果： ###
 > 之前：**insert into xxx (name, password) values (?, ?)**
 
-> 之后：**insert into xxx (name, password) values ({tom}, {123456})**
+> 之后：**insert into xxx (name, password) values (tom, 123456)**
 
 ----------
 

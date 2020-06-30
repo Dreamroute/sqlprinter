@@ -32,7 +32,7 @@ En Doc: 暂无
 	public class SqlPrinterConfig {
 
 	    @Value("${sql-show:true}")
-	    private String sqlType;
+	    private String show;
 
 	    /**
 	     * SQL打印，将sql中的问号（？）替换成真实值
@@ -41,7 +41,7 @@ En Doc: 暂无
 	    public SqlPrinter printer() {
 		SqlPrinter printer = new SqlPrinter();
 		Properties props = new Properties();
-		props.setProperty("type", sqlType);
+		props.setProperty("sql-show", show);
 		printer.setProperties(props);
 		return printer;
 	    }

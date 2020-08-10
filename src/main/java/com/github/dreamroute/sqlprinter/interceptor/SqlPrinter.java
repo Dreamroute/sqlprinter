@@ -108,7 +108,7 @@ public class SqlPrinter implements Interceptor {
                         }
                         
                         // 将set中的version减1得到where后面的version的值
-                        if (Objects.equals(propertyName, "version")) {
+                        if (Objects.equals(propertyName, "version") && value != null) {
                             versionValue = (long) value - 1;
                         }
                         

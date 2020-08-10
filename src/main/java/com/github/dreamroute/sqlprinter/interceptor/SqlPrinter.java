@@ -113,7 +113,7 @@ public class SqlPrinter implements Interceptor {
                         }
                         
                         // sql中非数字类型的值加单引号
-                        if (!(value instanceof Number)) {
+                        if (!(value instanceof Number) && value != null) {
                             value = "'" + value + "'";
                         }
                         
@@ -124,7 +124,7 @@ public class SqlPrinter implements Interceptor {
                 }
                 String result = sb.toString().replace("version = ?", "version = " + versionValue);
                 result = result.replace("\n", "").replace("\r", "");
-                logger.info("[Sqlprinter插件打印SQL]: {}", result);
+                logger.info("Sqlprinter print SQL: {}", result);
             }
 
         }

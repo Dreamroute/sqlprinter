@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.dreamroute</groupId>
 	<artifactId>sqlprinter</artifactId>
-	<version>1.5.8-RELEASE</version>
+	<version>1.5.9-RELEASE</version>
 
 	<name>sqlprinter</name>
 	<url>https://github.com/Dreamroute/sqlprinter</url>
@@ -83,6 +83,7 @@
 						</goals>
 						<configuration>
 							<additionalparam>-Xdoclint:none</additionalparam>
+							<encoding>UTF-8</encoding>
 						</configuration>
 					</execution>
 				</executions>

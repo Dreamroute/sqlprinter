@@ -4,3 +4,15 @@
 /.project
 /.settings/
 /.README.md.html
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/libraries/
+/.idea/sonarlint/
+/.idea/.gitignore
+/.idea/compiler.xml
+/.idea/encodings.xml
+/.idea/jarRepositories.xml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/uiDesigner.xml
+/.idea/vcs.xml
+/sqlprinter.iml

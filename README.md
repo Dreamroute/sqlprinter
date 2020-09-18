@@ -19,9 +19,9 @@
 
 ----------
 ### 1. Spring Boot项目：
-    版本1.6.0之后：在启动类上使用@EnableSQLPrinter即可开起（如果生产环境不希望显示sql，在application.yml/properties中配置sql-show=false即可）
+    版本1.6.0之后：在启动类上使用@EnableSQLPrinter即可开起（如果生产环境不希望显示sql，在application.yml/properties中配置sqlprinter.sql-show=false即可）
     
-### 2. 使用方式：传统Spring MVC项目：在mybatis配置文件中加入如下配置，就完成了，生产环境不希望显示，在插件中增加属性sqlprinter.sql-show=false即可。 ###
+### 2. 使用方式：传统Spring MVC项目：在mybatis配置文件中加入如下配置，就完成了，生产环境不希望显示，在插件中增加属性sql-show=false即可。 ###
 	<plugins>
 		<plugin interceptor="com.mook.sqlprinter.interceptor.SqlPrinter"/>
 	</plugins>

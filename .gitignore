@@ -1,0 +1,8 @@
+/.idea/
+/sqlprinter-spring-boot-starter/target/classes/
+/sqlprinter-spring-boot-starter/sqlprinter-spring-boot-starter.iml
+/sqlprinter-samples/sqlprinter-samples.iml
+/sqlprinter-samples/spring-boot/target/
+/target/
+/sqlprinter-spring-boot-starter/target/
+/sqlprinter-samples/target/

@@ -24,7 +24,7 @@
 ### 2. 使用方式：传统Spring MVC项目：在mybatis配置文件中加入如下配置，就完成了，生产环境不希望显示，在插件中增加属性sql-show=false即可。 ###
 	<plugins>
 		<plugin interceptor="com.github.dreamroute.sqlprinter.starter.interceptor.SqlPrinter">
-		    <!-- 如果不希望现实，那么就加上下方的配置 -->
+		    <!-- 如果不希望打印SQL，那么就加上下方的配置 -->
 		    <property name="sql-show" value="false"/>
 	    </plugin>
 	</plugins>

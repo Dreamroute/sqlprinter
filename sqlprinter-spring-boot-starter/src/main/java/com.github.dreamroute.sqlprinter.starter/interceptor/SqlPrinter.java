@@ -1,4 +1,4 @@
-/**
+/*
  * The MIT License (MIT)
  *
  * Copyright (c) 2016 342252328@qq.com
@@ -24,6 +24,7 @@
 package com.github.dreamroute.sqlprinter.starter.interceptor;
 
 import com.github.dreamroute.sqlprinter.starter.util.PluginUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;
@@ -37,8 +38,6 @@ import org.apache.ibatis.plugin.Plugin;
 import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -49,15 +48,13 @@ import java.util.Properties;
  * print simple sql
  *
  * @author 342252328@qq.com
- * @date 2016-06-14
  * @version 1.0
+ * @date 2016-06-14
  * @since JDK1.7
- *
  */
+@Slf4j
 @Intercepts({@Signature(type = ParameterHandler.class, method = "setParameters", args = {PreparedStatement.class})})
 public class SqlPrinter implements Interceptor {
-
-    private static Logger logger = LoggerFactory.getLogger(SqlPrinter.class);
 
     private Properties props = new Properties();
 
@@ -75,7 +72,7 @@ public class SqlPrinter implements Interceptor {
 
     private void printSql(Invocation invocation) {
         String show = props.getProperty("sql-show", "true");
-        if (Boolean.valueOf(show)) {
+        if (Boolean.parseBoolean(show)) {
             Object parameterHander = invocation.getTarget();
             Object target = PluginUtil.processTarget(parameterHander);
 
@@ -90,8 +87,7 @@ public class SqlPrinter implements Interceptor {
             List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
             if (parameterMappings != null) {
                 long versionValue = 0;
-                for (int i = 0; i < parameterMappings.size(); i++) {
-                    ParameterMapping parameterMapping = parameterMappings.get(i);
+                for (ParameterMapping parameterMapping : parameterMappings) {
                     if (parameterMapping.getMode() != ParameterMode.OUT) {
                         Object value;
                         String propertyName = parameterMapping.getProperty();
@@ -123,7 +119,7 @@ public class SqlPrinter implements Interceptor {
                 }
                 String result = sb.toString().replace("version = ?", "version = " + versionValue);
                 result = result.replace("\n", "").replace("\r", "");
-                logger.info("Sqlprinter print SQL: {}", result);
+                log.info("Sqlprinter print SQL: {}", result);
             }
 
         }

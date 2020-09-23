@@ -15,22 +15,25 @@
 
 ----------
 
-	描述：本插件主要是为了解决在开发调试过程中MyBatis在eclipse/idea控制台输出的sql中参数和sql语句分离的问题。生产环境一般不需要此插件（设置成false即可）。
+> 描述：本插件主要是为了解决在开发调试过程中MyBatis在eclipse/idea控制台输出的sql中参数和sql语句分离的问题。生产环境一般不需要此插件（设置成false即可）。
 
 ----------
 ### 1. Spring Boot项目：
-    版本2.0.0之后：在启动类上使用@EnableSQLPrinter即可开起（如果生产环境不希望显示sql，在application.yml/properties中配置sqlprinter.sql-show=false即可）
+> 版本2.0.0之后：在启动类上使用@EnableSQLPrinter即可开起（如果生产环境不希望显示sql，在application.yml/properties中配置sqlprinter.sql-show=false即可）
     
 ### 2. 使用方式：传统Spring MVC项目：在mybatis配置文件中加入如下配置，就完成了，生产环境不希望显示，在插件中增加属性sql-show=false即可。 ###
 	<plugins>
-		<plugin interceptor="com.github.dreamroute.sqlprinter.starter.interceptor.SqlPrinter"/>
+		<plugin interceptor="com.github.dreamroute.sqlprinter.starter.interceptor.SqlPrinter">
+		    <!-- 如果不希望现实，那么就加上下方的配置 -->
+		    <property name="sql-show" value="false"/>
+	    </plugin>
 	</plugins>
 ----------
 
 ### 2. 效果： ###
 > 之前：**insert into xxx (name, password) values (?, ?)**
 
-> 之后：**insert into xxx (name, password) values (tom, 123456)**
+> 之后：**insert into xxx (name, password) values ('tom', 123456)**
 
 ----------
 
@@ -45,10 +48,7 @@
 
 ----------
 ### 5.Demo ###
-	1、在数据库中建立表，表名smart_user(可以按照你自己的)；
-	2、表的字段为id(int)，name(varchar)，password(varchar)，version(bigint)；
-	3、数据库连接信息在mybatis-config.xml文件中修改，改成你自己的数据库信息；
-	4、直接运行com.mook.locker.misc.test.mapper下面的各个测试方法，观察控制台输出结果；
+	本项目可以直接pull到本地执行单元测试观察效果
 
 ----------
 

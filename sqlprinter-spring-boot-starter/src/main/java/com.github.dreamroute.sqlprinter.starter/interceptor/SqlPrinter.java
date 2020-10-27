@@ -38,6 +38,7 @@ import org.apache.ibatis.plugin.Plugin;
 import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
+import org.apache.ibatis.scripting.defaults.DefaultParameterHandler;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -72,8 +73,8 @@ public class SqlPrinter implements Interceptor {
 
     private void printSql(Invocation invocation) {
         String show = props.getProperty("sql-show", "true");
+        DefaultParameterHandler parameterHander = (DefaultParameterHandler) invocation.getTarget();
         if (Boolean.parseBoolean(show)) {
-            Object parameterHander = invocation.getTarget();
             Object target = PluginUtil.processTarget(parameterHander);
 
             MetaObject handler = SystemMetaObject.forObject(target);

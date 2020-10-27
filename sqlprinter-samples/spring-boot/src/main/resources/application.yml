@@ -1,2 +1,5 @@
 sqlprinter:
   sql-show: true
+  filter:
+    - selectById
+    - selectAll

@@ -1,10 +1,12 @@
 package com.github.dreamroute.sqlprinter.starter.anno;
 
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * @author w.dehai
  */
+@Data
 @ConfigurationProperties(prefix = "sqlprinter")
 public class SqlprinterProperties {
 
@@ -13,11 +15,8 @@ public class SqlprinterProperties {
      */
     private boolean sqlShow = true;
 
-    public boolean isSqlShow() {
-        return sqlShow;
-    }
-
-    public void setSqlShow(boolean sqlShow) {
-        this.sqlShow = sqlShow;
-    }
+    /**
+     * 配置不需要打印SQL的mapper方法名
+     */
+    private String[] filter;
 }

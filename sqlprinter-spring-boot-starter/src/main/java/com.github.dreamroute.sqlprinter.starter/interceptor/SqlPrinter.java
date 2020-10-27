@@ -40,10 +40,17 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
 import org.apache.ibatis.scripting.defaults.DefaultParameterHandler;
 
+import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
+
+import static java.util.Arrays.stream;
+import static java.util.Optional.ofNullable;
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.toMap;
 
 /**
  * print simple sql
@@ -73,8 +80,21 @@ public class SqlPrinter implements Interceptor {
 
     private void printSql(Invocation invocation) {
         String show = props.getProperty("sql-show", "true");
+        String filter = props.getProperty("filter");
+        Map<String, String> methodNames = stream(ofNullable(filter).orElseGet(String::new).split(",")).collect(toMap(identity(), identity()));
+        String methodName = null;
         DefaultParameterHandler parameterHander = (DefaultParameterHandler) invocation.getTarget();
-        if (Boolean.parseBoolean(show)) {
+        try {
+            Field mappedStatement = DefaultParameterHandler.class.getDeclaredField("mappedStatement");
+            mappedStatement.setAccessible(true);
+            MappedStatement ms = (MappedStatement) mappedStatement.get(parameterHander);
+            String id = ms.getId();
+            int pos = id.lastIndexOf('.');
+            methodName = id.substring(pos + 1);
+        } catch (Exception e) {
+            // ignore.
+        }
+        if (Boolean.parseBoolean(show) && !methodNames.containsKey(methodName)) {
             Object target = PluginUtil.processTarget(parameterHander);
 
             MetaObject handler = SystemMetaObject.forObject(target);

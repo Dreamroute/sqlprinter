@@ -36,6 +36,7 @@ class UserMapperTest {
     void updateTest() {
         User user = userMapper.selectById(1L);
         user.setPassword("update");
+        userMapper.updateById(user);
     }
 
 }

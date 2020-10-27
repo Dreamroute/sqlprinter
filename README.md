@@ -19,12 +19,22 @@
 
 ----------
 ### 1. Spring Boot项目：
-> 版本2.0.0之后：在启动类上使用@EnableSQLPrinter即可开起（如果生产环境不希望显示sql，在application.yml/properties中配置sqlprinter.sql-show=false即可）
-    
+1. 版本2.0.0之后：在启动类上使用@EnableSQLPrinter即可开起（如果生产环境不希望显示sql，在application.yml/properties中配置sqlprinter.sql-show=false即可）
+
+2. 过滤功能：对于有一些sql打印比较频繁，不希望展示在日志中，那么可以在application.yml/properties中配置中配置sqlprinter.filter数组（数组内容就是Mapper接口的方法名），如下：
+    ```
+    sqlprinter:
+      sql-show: true
+      filter:
+        - selectById
+        - selectAll
+    ```
+   那么selectById和selectById方法就不会打印sql了。
+
 ### 2. 使用方式：传统Spring MVC项目：在mybatis配置文件中加入如下配置，就完成了，生产环境不希望显示，在插件中增加属性sql-show=false即可。 ###
 	<plugins>
 		<plugin interceptor="com.github.dreamroute.sqlprinter.starter.interceptor.SqlPrinter">
-		    <!-- 如果不希望打印SQL，那么就加上下方的配置 -->
+		    <!-- 如果不希望现实，那么就加上下方的配置 -->
 		    <property name="sql-show" value="false"/>
 	    </plugin>
 	</plugins>

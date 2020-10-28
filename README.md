@@ -26,8 +26,8 @@
     sqlprinter:
       sql-show: true
       filter:
-        - selectById
-        - selectAll
+        - com.github.dreamroute.sqlprinter.boot.mapper.UserMapper.selectById
+        - com.github.dreamroute.sqlprinter.boot.mapper.UserMapper.selectAll
     ```
    那么selectById和selectById方法就不会打印sql了。
 

@@ -81,16 +81,14 @@ public class SqlPrinter implements Interceptor {
     private void printSql(Invocation invocation) {
         String show = props.getProperty("sql-show", "true");
         String filter = props.getProperty("filter");
-        Map<String, String> methodNames = stream(ofNullable(filter).orElseGet(String::new).split(",")).collect(toMap(identity(), identity()));
+        Map<String, String> methodNames = stream(ofNullable(filter).orElseGet(String::new).split(",")).collect(toMap(identity(), t -> ""));
         String methodName = null;
         DefaultParameterHandler parameterHander = (DefaultParameterHandler) invocation.getTarget();
         try {
             Field mappedStatement = DefaultParameterHandler.class.getDeclaredField("mappedStatement");
             mappedStatement.setAccessible(true);
             MappedStatement ms = (MappedStatement) mappedStatement.get(parameterHander);
-            String id = ms.getId();
-            int pos = id.lastIndexOf('.');
-            methodName = id.substring(pos + 1);
+            methodName = ms.getId();
         } catch (Exception e) {
             // ignore.
         }

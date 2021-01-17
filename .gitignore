@@ -6,3 +6,9 @@
 /target/
 /sqlprinter-spring-boot-starter/target/
 /sqlprinter-samples/target/
+/sqlprinter-samples/spring-boot/.flattened-pom.xml
+/sqlprinter-samples/spring-boot/spring-boot.iml
+/.flattened-pom.xml
+/sqlprinter.iml
+/sqlprinter-samples/.flattened-pom.xml
+/sqlprinter-spring-boot-starter/.flattened-pom.xml

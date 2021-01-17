@@ -20,7 +20,7 @@
     <version>${revision}</version>
     <packaging>pom</packaging>
 
-    <name>sqlprinter</name>
+    <name>${project.artifactId}</name>
     <url>https://github.com/Dreamroute/sqlprinter</url>
     <description>print sql replace '?' in sql fragment.</description>
 

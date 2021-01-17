@@ -14,7 +14,6 @@
 
     <artifactId>sqlprinter-samples</artifactId>
     <packaging>pom</packaging>
-    <version>2.0.4-RELEASE</version>
 
     <build>
         <plugins>

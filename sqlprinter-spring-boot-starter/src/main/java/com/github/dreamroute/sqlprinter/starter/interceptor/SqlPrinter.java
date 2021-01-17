@@ -25,7 +25,6 @@ package com.github.dreamroute.sqlprinter.starter.interceptor;
 
 import com.github.dreamroute.mybatis.pro.core.typehandler.EnumMarker;
 import com.github.dreamroute.sqlprinter.starter.util.PluginUtil;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;
@@ -40,6 +39,8 @@ import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
 import org.apache.ibatis.scripting.defaults.DefaultParameterHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
@@ -60,9 +61,10 @@ import static java.util.stream.Collectors.toMap;
  * @version 1.0
  * @since JDK1.8
  */
-@Slf4j
 @Intercepts({@Signature(type = ParameterHandler.class, method = "setParameters", args = {PreparedStatement.class})})
 public class SqlPrinter implements Interceptor {
+
+    private static final Logger log = LoggerFactory.getLogger(SqlPrinter.class);
 
     private Properties props = new Properties();
 

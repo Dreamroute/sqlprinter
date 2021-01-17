@@ -44,7 +44,7 @@
     </scm>
 
     <properties>
-        <revision>100</revision>
+        <revision>2.0.5-RELEASE</revision>
 
         <java.version>1.8</java.version>
         <maven.compiler.target>${java.version}</maven.compiler.target>

@@ -23,8 +23,8 @@
  */
 package com.github.dreamroute.sqlprinter.starter.interceptor;
 
+import com.github.dreamroute.mybatis.pro.core.typehandler.EnumMarker;
 import com.github.dreamroute.sqlprinter.starter.util.PluginUtil;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;
@@ -39,6 +39,8 @@ import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
 import org.apache.ibatis.scripting.defaults.DefaultParameterHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
@@ -55,14 +57,14 @@ import static java.util.stream.Collectors.toMap;
 /**
  * print simple sql
  *
- * @author 342252328@qq.com
+ * @author 342252328@qq.com.2016-06-14
  * @version 1.0
- * @date 2016-06-14
- * @since JDK1.7
+ * @since JDK1.8
  */
-@Slf4j
 @Intercepts({@Signature(type = ParameterHandler.class, method = "setParameters", args = {PreparedStatement.class})})
 public class SqlPrinter implements Interceptor {
+
+    private static final Logger log = LoggerFactory.getLogger(SqlPrinter.class);
 
     private Properties props = new Properties();
 
@@ -119,6 +121,13 @@ public class SqlPrinter implements Interceptor {
                         } else {
                             MetaObject metaObject = mappedStatement.getConfiguration().newMetaObject(parameterObject);
                             value = metaObject.getValue(propertyName);
+                        }
+
+                        // 处理枚举
+                        boolean isEnumMark = value instanceof EnumMarker;
+                        if (isEnumMark) {
+                            EnumMarker em = (EnumMarker) value;
+                            value = em.getValue();
                         }
 
                         // 将set中的version减1得到where后面的version的值

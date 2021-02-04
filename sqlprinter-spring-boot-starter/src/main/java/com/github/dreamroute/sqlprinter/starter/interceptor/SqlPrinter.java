@@ -147,7 +147,7 @@ public class SqlPrinter implements Interceptor {
                 }
                 String result = sb.toString().replace("version = ?", "version = " + versionValue);
                 result = result.replace("\n", "").replace("\r", "");
-                log.info("Sqlprinter插件打印SQL: {}", result);
+                log.info("SqlPrinter打印SQL: \r\n方法 => [{}], \r\nSQL => [{}]", mappedStatement.getId(), result);
             }
 
         }

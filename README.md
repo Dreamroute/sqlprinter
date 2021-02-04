@@ -14,6 +14,9 @@
 ```
 
 ----------
+### 最新版本：[点击查看](https://search.maven.org/artifact/com.github.dreamroute/sqlprinter-spring-boot-starter)
+
+--------------
 
 > 描述：本插件主要是为了解决在开发调试过程中MyBatis在eclipse/idea控制台输出的sql中参数和sql语句分离的问题。生产环境一般不需要此插件（设置成false即可）。
 

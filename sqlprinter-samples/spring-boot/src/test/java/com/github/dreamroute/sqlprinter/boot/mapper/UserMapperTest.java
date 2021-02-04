@@ -39,4 +39,9 @@ class UserMapperTest {
         userMapper.updateById(user);
     }
 
+    @Test
+    void selectUsersTest() {
+        userMapper.selectUsers();
+    }
+
 }

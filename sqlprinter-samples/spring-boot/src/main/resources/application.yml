@@ -2,4 +2,5 @@ sqlprinter:
   sql-show: true
   filter:
     - com.github.dreamroute.sqlprinter.boot.mapper.UserMapper.selectById
-    - com.github.dreamroute.sqlprinter.boot.mapper.UserMapper.selectAll
+mybatis:
+  mapper-locations: /mapper/*

@@ -160,15 +160,15 @@ public class SqlPrinter implements Interceptor {
                 int sqlLen = result.length();
                 int len = Integer.max(idLen, sqlLen);
                 String split = "";
-                split = StringUtils.rightPad(split, len + 10, "-");
+                split = StringUtils.rightPad(split, len + 10, "~");
 
                 String format = "\r\n" +
                         "{}\r\n" +
-                        "|方法| {}\r\n" +
-                        "| sql| {}\r\n" +
+                        "{}\r\n" +
+                        "{}\r\n" +
+                        "{}\r\n" +
                         "{}";
-                log.info(format, split, id, result, split);
-
+                log.info(format, split, "[   " + rightPad(id, len + 5) + "]", split, "[   " + rightPad(result, len + 5) + "]", split);
             }
 
         }

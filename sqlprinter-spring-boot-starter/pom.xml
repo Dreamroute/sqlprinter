@@ -9,8 +9,26 @@
         <version>${revision}</version>
     </parent>
 
-    <name>${project.artifactId}</name>
     <artifactId>sqlprinter-spring-boot-starter</artifactId>
+    <name>${project.artifactId}</name>
+    <url>https://github.com/Dreamroute/sqlprinter</url>
+    <description>print sql use real value replace '?' in sql fragment.</description>
+    <licenses>
+        <license>
+            <name>MIT</name>
+            <url>https://opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>w.dehai</name>
+            <email>342252328@qq.com</email>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>https://github.com/Dreamroute/sqlprinter</url>
+    </scm>
 
     <build>
         <plugins>

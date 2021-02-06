@@ -19,30 +19,6 @@
     <version>${revision}</version>
     <packaging>pom</packaging>
 
-    <name>${project.artifactId}</name>
-    <url>https://github.com/Dreamroute/sqlprinter</url>
-    <description>print sql replace '?' in sql fragment.</description>
-
-    <licenses>
-        <license>
-            <name>MIT</name>
-            <url>https://opensource.org/licenses/mit-license.php</url>
-        </license>
-    </licenses>
-
-    <developers>
-        <developer>
-            <name>wangdehai</name>
-            <email>342252328@qq.com</email>
-        </developer>
-    </developers>
-
-    <scm>
-        <connection>scm:git:git@github.com:Dreamroute/sqlprinter.git</connection>
-        <developerConnection>scm:git:git@github.com:Dreamroute/sqlprinter.git</developerConnection>
-        <url>https://github.com/Dreamroute/sqlprinter</url>
-    </scm>
-
     <properties>
         <revision>2.1.2-RELEASE</revision>
 

@@ -22,7 +22,7 @@
 
 ----------
 ### 1. Spring Boot项目：
-1. 版本2.0.0之后：在启动类上使用@EnableSQLPrinter即可开起，如果在2.0.7-RELEASE之后，需要排除掉`@SpringBootApplication(exclude = {MyBatisProAutoConfiguration.class})`，（如果生产环境不希望显示sql，在application.yml/properties中配置sqlprinter.sql-show=false即可）
+1. 版本2.0.0之后：在启动类上使用@EnableSQLPrinter即可开起（如果生产环境不希望显示sql，在application.yml/properties中配置sqlprinter.sql-show=false即可）
 
 2. 过滤功能：对于有一些sql打印比较频繁，不希望展示在日志中，那么可以在application.yml/properties中配置中配置sqlprinter.filter数组（数组内容就是Mapper接口的方法名），如下：
     ```

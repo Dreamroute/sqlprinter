@@ -30,6 +30,14 @@
         <url>https://github.com/Dreamroute/sqlprinter</url>
     </scm>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.github.dreamroute</groupId>
+            <artifactId>mybatis-pro-core</artifactId>
+            <version>${mybatis-pro.version}</version>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>

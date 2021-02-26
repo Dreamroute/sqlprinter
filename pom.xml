@@ -20,7 +20,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <revision>2.1.2-RELEASE</revision>
+        <revision>2.1.4-RELEASE</revision>
 
         <java.version>1.8</java.version>
         <maven.compiler.target>${java.version}</maven.compiler.target>
@@ -62,15 +62,9 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis</artifactId>
-            <version>3.4.6</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
             <groupId>com.github.dreamroute</groupId>
             <artifactId>mybatis-pro-boot-starter</artifactId>
-            <version>1.2.1</version>
+            <version>1.2.3</version>
         </dependency>
         <dependency>
             <groupId>com.github.jsqlparser</groupId>

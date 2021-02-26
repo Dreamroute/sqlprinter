@@ -27,7 +27,6 @@ import com.github.dreamroute.mybatis.pro.core.typehandler.EnumMarker;
 import com.github.dreamroute.sqlprinter.starter.util.PluginUtil;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;
@@ -56,7 +55,6 @@ import static java.util.Arrays.stream;
 import static java.util.Optional.ofNullable;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
-import static org.apache.commons.lang3.StringUtils.rightPad;
 
 /**
  * print simple sql
@@ -156,19 +154,9 @@ public class SqlPrinter implements Interceptor {
                     throw new RuntimeException("你的SQL语句语法有错误, SQL: " + result);
                 }
                 String id = mappedStatement.getId();
-                int idLen = id.length();
-                int sqlLen = result.length();
-                int len = Integer.max(idLen, sqlLen);
-                String split = "";
-                split = StringUtils.rightPad(split, len + 10, "~");
+                String name = id.substring(id.lastIndexOf(".") + 1);
 
-                String format = "\r\n" +
-                        "{}\r\n" +
-                        "{}\r\n" +
-                        "{}\r\n" +
-                        "{}\r\n" +
-                        "{}";
-                log.info(format, split, "[   " + rightPad(id, len + 5) + "]", split, "[   " + rightPad(result, len + 5) + "]", split);
+                log.info("{}", "\r\n====SQL====>[" + name + "]==>[" + result + "]");
             }
 
         }

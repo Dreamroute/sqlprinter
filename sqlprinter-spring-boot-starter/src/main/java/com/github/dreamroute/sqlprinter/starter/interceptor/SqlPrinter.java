@@ -153,7 +153,7 @@ public class SqlPrinter implements Interceptor {
                 } catch (JSQLParserException e) {
                     throw new RuntimeException("你的SQL语句语法有错误, SQL: " + result);
                 }
-                log.info("{}", "\r\n===SQL===>[" + mappedStatement.getId() + "]\r\n===SQL===>[" + result + "]");
+                log.info("{}", "\r\n===方法===>[" + mappedStatement.getId() + "]\r\n===SQL===>[" + result + "]");
             }
 
         }

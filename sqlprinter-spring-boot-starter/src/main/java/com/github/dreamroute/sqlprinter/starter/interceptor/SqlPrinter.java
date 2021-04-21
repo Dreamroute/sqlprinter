@@ -87,7 +87,7 @@ public class SqlPrinter implements Interceptor {
         String filter = props.getProperty("filter");
         Map<String, String> methodNames = stream(ofNullable(filter).orElseGet(String::new).split(",")).collect(toMap(identity(), t -> ""));
         String methodName = null;
-        DefaultParameterHandler parameterHander = (DefaultParameterHandler) invocation.getTarget();
+        DefaultParameterHandler parameterHander = (DefaultParameterHandler) PluginUtil.processTarget(invocation.getTarget());
         try {
             Field mappedStatement = DefaultParameterHandler.class.getDeclaredField("mappedStatement");
             mappedStatement.setAccessible(true);

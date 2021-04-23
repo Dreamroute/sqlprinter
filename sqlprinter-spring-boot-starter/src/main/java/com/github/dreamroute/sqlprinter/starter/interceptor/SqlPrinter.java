@@ -25,8 +25,6 @@ package com.github.dreamroute.sqlprinter.starter.interceptor;
 
 import com.github.dreamroute.mybatis.pro.core.typehandler.EnumMarker;
 import com.github.dreamroute.sqlprinter.starter.util.PluginUtil;
-import net.sf.jsqlparser.JSQLParserException;
-import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;
@@ -148,11 +146,11 @@ public class SqlPrinter implements Interceptor {
                     }
                 }
                 String result = sb.toString().replace("version = ?", "version = " + versionValue);
-                try {
-                    result = CCJSqlParserUtil.parse(result).toString();
-                } catch (JSQLParserException e) {
-                    throw new RuntimeException("你的SQL语句语法有错误, SQL: " + result);
-                }
+//                try {
+//                    result = CCJSqlParserUtil.parse(result).toString();
+//                } catch (JSQLParserException e) {
+//                    throw new RuntimeException("你的SQL语句语法有错误, SQL: " + result);
+//                }
                 log.info("{}", "\r\n===方法===>[" + mappedStatement.getId() + "]\r\n===SQL====>[" + result + "]");
             }
 

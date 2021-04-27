@@ -20,7 +20,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <revision>2.1.7-RELEASE</revision>
+        <revision>2.1.8-RELEASE</revision>
 
         <java.version>1.8</java.version>
         <maven.compiler.target>${java.version}</maven.compiler.target>

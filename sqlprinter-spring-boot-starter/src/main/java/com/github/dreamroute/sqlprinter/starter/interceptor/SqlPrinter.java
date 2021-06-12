@@ -146,12 +146,7 @@ public class SqlPrinter implements Interceptor {
                     }
                 }
                 String result = sb.toString().replace("version = ?", "version = " + versionValue);
-//                try {
-//                    result = CCJSqlParserUtil.parse(result).toString();
-//                } catch (JSQLParserException e) {
-//                    throw new RuntimeException("你的SQL语句语法有错误, SQL: " + result);
-//                }
-                log.info("{}", "\r\n===方法===>[" + mappedStatement.getId() + "]\r\n===SQL====>[" + result + "]");
+                log.info("{}", "\r\n===方法===>\r\n" + mappedStatement.getId() + "\r\n===SQL====>" + "\r\n" + result);
             }
 
         }

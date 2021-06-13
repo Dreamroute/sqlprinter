@@ -4,3 +4,6 @@ sqlprinter:
     - com.github.dreamroute.sqlprinter.boot.mapper.UserMapper.selectById
 mybatis:
   mapper-locations: /mapper/*
+  type-handlers-package: com.github.dreamroute.mybatis.pro.base.typehandler
+  pro:
+    delete-use-update: false

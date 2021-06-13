@@ -33,14 +33,13 @@
     <dependencies>
         <dependency>
             <groupId>com.github.dreamroute</groupId>
-            <artifactId>mybatis-pro-core</artifactId>
+            <artifactId>mybatis-pro-base</artifactId>
             <version>${mybatis-pro.version}</version>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <!--
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
@@ -50,14 +49,6 @@
                     <serverId>ossrh</serverId>
                     <nexusUrl>https://oss.sonatype.org</nexusUrl>
                     <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                </configuration>
-            </plugin>
-            -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <configuration>
-                    <skip>false</skip>
                 </configuration>
             </plugin>
         </plugins>

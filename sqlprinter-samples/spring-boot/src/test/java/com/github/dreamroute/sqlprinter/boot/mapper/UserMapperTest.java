@@ -1,9 +1,17 @@
 package com.github.dreamroute.sqlprinter.boot.mapper;
 
 import com.github.dreamroute.sqlprinter.boot.domain.User;
+import com.ninja_squad.dbsetup.DbSetup;
+import com.ninja_squad.dbsetup.Operations;
+import com.ninja_squad.dbsetup.destination.DataSourceDestination;
+import com.ninja_squad.dbsetup.operation.Insert;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import javax.annotation.Resource;
+import javax.sql.DataSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -16,6 +24,19 @@ class UserMapperTest {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Resource
+    private DataSource dataSource;
+
+    @BeforeEach
+    void beforeEach() {
+        new DbSetup(new DataSourceDestination(dataSource), Operations.truncate("smart_user")).launch();
+        Insert insert = Operations.insertInto("smart_user")
+                .columns("id", "name")
+                .values(1L, "w.dehai")
+                .values(2L, "Dreamroute").build();
+        new DbSetup(new DataSourceDestination(dataSource), insert).launch();
+    }
 
     @Test
     void selectByIdTest() {

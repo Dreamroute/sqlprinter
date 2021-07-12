@@ -10,4 +10,10 @@
             smart_user
     </select>
 
+    <select id="selectUserByIds" resultType="com.github.dreamroute.sqlprinter.boot.domain.User">
+        select * from smart_user where id in
+        <foreach collection="ids" index="index" item="item" separator="," open="(" close=")">
+            (#{item})
+        </foreach>
+    </select>
 </mapper>

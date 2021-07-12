@@ -13,6 +13,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 
+import java.util.List;
+
+import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -63,6 +66,12 @@ class UserMapperTest {
     @Test
     void selectUsersTest() {
         userMapper.selectUsers();
+    }
+
+    @Test
+    void selectUserByIdsTest() {
+        List<User> users = userMapper.selectUserByIds(newArrayList(1L, 2L));
+        System.err.println(users);
     }
 
 }

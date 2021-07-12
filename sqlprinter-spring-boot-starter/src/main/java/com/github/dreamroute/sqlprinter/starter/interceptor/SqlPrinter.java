@@ -150,9 +150,11 @@ public class SqlPrinter implements Interceptor {
                     }
                 }
                 String result = sb.toString().replace("version = ?", "version = " + versionValue);
-                log.info("{}", "\r\n===方法===>\r\n" + mappedStatement.getId() + "\r\n===SQL====>" + "\r\n" + result);
+                String id = mappedStatement.getId();
+                String[] split = id.split("\\.");
+                String name = split[split.length - 2] + "." + split[split.length - 1];
+                log.info("{}", "\r\n===SQL====" + name + "=======>\r\n" + result);
             }
-
         }
     }
 

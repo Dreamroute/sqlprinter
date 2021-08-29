@@ -1,6 +1,6 @@
 package com.github.dreamroute.sqlprinter.boot.domain;
 
-import com.github.dreamroute.mybatis.pro.base.typehandler.EnumMarker;
+import com.github.dreamroute.mybatis.pro.base.EnumMarker;
 import com.github.dreamroute.mybatis.pro.core.annotations.Id;
 import com.github.dreamroute.mybatis.pro.core.annotations.Table;
 import lombok.AllArgsConstructor;

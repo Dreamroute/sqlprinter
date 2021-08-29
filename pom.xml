@@ -29,7 +29,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
 
-        <mybatis-pro.version>1.3.4</mybatis-pro.version>
+        <mybatis-pro.version>1.3.5</mybatis-pro.version>
     </properties>
 
     <dependencies>

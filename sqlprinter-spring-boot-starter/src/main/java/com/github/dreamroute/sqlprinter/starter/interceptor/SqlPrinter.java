@@ -23,8 +23,6 @@
  */
 package com.github.dreamroute.sqlprinter.starter.interceptor;
 
-import cn.hutool.core.util.EnumUtil;
-import com.github.dreamroute.mybatis.pro.base.typehandler.EnumMarker;
 import com.github.dreamroute.sqlprinter.starter.util.PluginUtil;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
@@ -122,16 +120,6 @@ public class SqlPrinter implements Interceptor {
                         } else {
                             MetaObject metaObject = mappedStatement.getConfiguration().newMetaObject(parameterObject);
                             value = metaObject.getValue(propertyName);
-                        }
-
-                        // 处理枚举
-                        if (value != null && EnumUtil.isEnum(value)) {
-                            if (value instanceof EnumMarker) {
-                                EnumMarker em = (EnumMarker) value;
-                                value = em.getValue();
-                            } else {
-                                value = value.toString();
-                            }
                         }
 
                         // 将set中的version减1得到where后面的version的值

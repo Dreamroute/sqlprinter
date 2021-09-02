@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 /**
  * @author w.dehai
  */
@@ -20,5 +22,6 @@ public class User {
     private String name;
     private String password;
     private Long version;
+    private Date birthday;
 
 }

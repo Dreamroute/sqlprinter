@@ -23,6 +23,7 @@
  */
 package com.github.dreamroute.sqlprinter.starter.interceptor;
 
+import cn.hutool.core.date.DateUtil;
 import com.github.dreamroute.sqlprinter.starter.util.PluginUtil;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
@@ -43,6 +44,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -120,6 +122,15 @@ public class SqlPrinter implements Interceptor {
                         } else {
                             MetaObject metaObject = mappedStatement.getConfiguration().newMetaObject(parameterObject);
                             value = metaObject.getValue(propertyName);
+                        }
+
+                        // 处理日期
+                        if (value != null) {
+                            if (value instanceof Date) {
+                                value = DateUtil.format((Date) value, "yyyy-MM-dd HH:mm:sss.SSS");
+                            } else {
+                                value = value.toString();
+                            }
                         }
 
                         // 将set中的version减1得到where后面的version的值

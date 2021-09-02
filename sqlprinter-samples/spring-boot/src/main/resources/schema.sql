@@ -7,12 +7,6 @@ CREATE TABLE `smart_user`
     `name`     varchar(32) NULL,
     `password` varchar(32) NULL,
     `version`  bigint(0) NULL DEFAULT 0,
-    PRIMARY KEY (`id`)
-);
-
-CREATE TABLE `smart_typehandler`
-(
-    `id`     bigint(20) NOT NULL AUTO_INCREMENT,
-    `gender` tinyint(4) DEFAULT NULL,
+    `birthday` datetime DEFAULT NULL,
     PRIMARY KEY (`id`)
 );

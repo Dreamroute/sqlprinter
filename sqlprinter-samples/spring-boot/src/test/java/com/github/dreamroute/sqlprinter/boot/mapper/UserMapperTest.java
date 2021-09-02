@@ -12,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
-
+import java.util.Date;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -52,6 +52,7 @@ class UserMapperTest {
         User user = new User();
         user.setName("Jaedong");
         user.setPassword("123456");
+        user.setBirthday(new Date());
         userMapper.insert(user);
         assertNotNull(user.getId());
     }

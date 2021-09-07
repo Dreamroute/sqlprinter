@@ -15,6 +15,7 @@ import javax.sql.DataSource;
 import java.util.Date;
 import java.util.List;
 
+import static com.github.dreamroute.sqlprinter.boot.domain.User.Gender.MALE;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -53,6 +54,7 @@ class UserMapperTest {
         user.setName("Jaedong");
         user.setPassword("123456");
         user.setBirthday(new Date());
+        user.setGender(MALE);
         userMapper.insert(user);
         assertNotNull(user.getId());
     }

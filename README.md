@@ -50,6 +50,29 @@
 
 ----------
 
+### 2.1. 自定义显示内容
+1. 在插件打印SQL的时候，对于有些特殊数据类型，可能插件默认打印方式不符合你的要求，比如日期类型Date默认打印的就是Date类型
+调用`toString`方法的结果，类似这样`Tue Sep 07 16:25:28 CST 2021`，而你需要的是`2021-09-07 16:25:028.673`，此时如果直接复制sql去执行，很有可能会报错，
+这时你就可以自定义日期类型的打印格式。
+2. 插件使用SPI技术解决这个问题。比如要答应`yyyy-MM-dd HH:mm:ss.SSS`类型的日期
+3. 创建日期转换器类，实现`ValueConverter`接口：
+```java
+public class DateConverter implements ValueConverter {
+    @Override
+    public Object convert(Object value) {
+        if (value instanceof Date) {
+            value = DateUtil.format((Date) value, "yyyy-MM-dd HH:mm:sss.SSS");
+        }
+        return value;
+    }
+}
+```
+4. 在应用的`/resources/META-INF/services`目录下创建文件如下：
+`com.github.dreamroute.sqlprinter.starter.anno.ValueConverter`
+5. 文件内容是`DateConverter`的全限定名（如果还有其他转换器，那么每一行一个即可）
+6. 此时你的属性为`Date`的字段打印的就是`2021-09-07 16:25:028.673`这种格式的了
+7. 这个机制相当有用，比如我司处理日期，枚举这种比较特殊的类型
+
 ### 3.插件说明： ###
 	1. 本插件是为了开发过程中方便程序员观察sql的打印情况，特别是参数较多的sql，很直观清晰，可以直接复制sql在数据库中执行，非常友好。<br>
 	2. 本插件仅仅是打印sql，插件内部不会破坏mybatis的任何核心，也不会和任何其他插件造成冲突，可以放心使用。

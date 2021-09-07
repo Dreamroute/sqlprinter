@@ -8,5 +8,6 @@ CREATE TABLE `smart_user`
     `password` varchar(32) NULL,
     `version`  bigint(0) NULL DEFAULT 0,
     `birthday` datetime DEFAULT NULL,
+    `gender`    tinyint(4) null,
     PRIMARY KEY (`id`)
 );

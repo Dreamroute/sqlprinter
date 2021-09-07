@@ -23,7 +23,7 @@
  */
 package com.github.dreamroute.sqlprinter.starter.interceptor;
 
-import cn.hutool.core.date.DateUtil;
+import com.github.dreamroute.sqlprinter.starter.anno.ValueConverter;
 import com.github.dreamroute.sqlprinter.starter.util.PluginUtil;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
@@ -44,11 +44,11 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.ServiceLoader;
 
 import static java.util.Arrays.stream;
 import static java.util.Optional.ofNullable;
@@ -124,22 +124,18 @@ public class SqlPrinter implements Interceptor {
                             value = metaObject.getValue(propertyName);
                         }
 
-                        // 处理日期
-                        if (value != null) {
-                            if (value instanceof Date) {
-                                value = DateUtil.format((Date) value, "yyyy-MM-dd HH:mm:sss.SSS");
-                            } else {
-                                value = value.toString();
-                            }
+                        ServiceLoader<ValueConverter> converters = ServiceLoader.load(ValueConverter.class);
+                        for (ValueConverter converter : converters) {
+                            value = converter.convert(value);
                         }
 
                         // 将set中的version减1得到where后面的version的值
-                        if (Objects.equals(propertyName, "version") && value != null) {
+                        if (value != null && Objects.equals(propertyName, "version")) {
                             versionValue = (long) value - 1;
                         }
 
                         // sql中非数字类型的值加单引号
-                        if (!(value instanceof Number) && value != null) {
+                        if (value != null && !(value instanceof Number)) {
                             value = "'" + value + "'";
                         }
 
@@ -152,7 +148,7 @@ public class SqlPrinter implements Interceptor {
                 String id = mappedStatement.getId();
                 String[] split = id.split("\\.");
                 String name = split[split.length - 2] + "." + split[split.length - 1];
-                log.info("{}", "\r\n===SQL====" + name + "=======>\r\n" + result);
+                log.info("\r\n===SQL===={}=======>\r\n{}", name, result);
             }
         }
     }

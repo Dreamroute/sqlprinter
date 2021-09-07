@@ -54,7 +54,7 @@
 1. 在插件打印SQL的时候，对于有些特殊数据类型，可能插件默认打印方式不符合你的要求，比如日期类型Date默认打印的就是Date类型
 调用`toString`方法的结果，类似这样`Tue Sep 07 16:25:28 CST 2021`，而你需要的是`2021-09-07 16:25:028.673`，此时如果直接复制sql去执行，很有可能会报错，
 这时你就可以自定义日期类型的打印格式。
-2. 插件使用SPI技术解决这个问题。比如要答应`yyyy-MM-dd HH:mm:ss.SSS`类型的日期
+2. 插件使用SPI技术解决这个问题。比如要打印`yyyy-MM-dd HH:mm:ss.SSS`类型的日期
 3. 创建日期转换器类，实现`ValueConverter`接口：
 ```java
 public class DateConverter implements ValueConverter {

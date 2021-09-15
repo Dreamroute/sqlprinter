@@ -32,9 +32,10 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.github.dreamroute</groupId>
-            <artifactId>mybatis-pro-base</artifactId>
-            <version>${mybatis-pro.version}</version>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>3.5.7</version>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 

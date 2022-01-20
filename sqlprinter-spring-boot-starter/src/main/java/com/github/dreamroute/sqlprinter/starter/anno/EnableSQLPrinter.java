@@ -18,5 +18,5 @@ public @interface EnableSQLPrinter {
     /**
      * SQL打印时候的值转换工具，比如属性值是Date类型，而在sql中希望展示成yyyy-MM-dd HH:mm:ss类型，那么就把转换工具配置在此
      */
-    Class<?>[] converters() default {};
+    Class<? extends ValueConverter>[] converters() default {};
 }

@@ -25,6 +25,8 @@ package com.github.dreamroute.sqlprinter.starter.interceptor;
 
 import com.github.dreamroute.sqlprinter.starter.anno.ValueConverter;
 import com.github.dreamroute.sqlprinter.starter.util.PluginUtil;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;
@@ -39,8 +41,6 @@ import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
 import org.apache.ibatis.scripting.defaults.DefaultParameterHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
@@ -49,7 +49,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
 
-import static com.github.dreamroute.sqlprinter.starter.interceptor.ValueConverterCache.CONVERTERS;
 import static java.util.Arrays.stream;
 import static java.util.Optional.ofNullable;
 import static java.util.function.Function.identity;
@@ -62,12 +61,13 @@ import static java.util.stream.Collectors.toMap;
  * @version 1.0
  * @since JDK1.8
  */
+@Slf4j
+@RequiredArgsConstructor
 @Intercepts({@Signature(type = ParameterHandler.class, method = "setParameters", args = {PreparedStatement.class})})
 public class SqlPrinter implements Interceptor {
 
-    private static final Logger log = LoggerFactory.getLogger(SqlPrinter.class);
-
-    private Properties props = new Properties();
+    private final Properties props;
+    private final List<ValueConverter> converters;
 
     @Override
     public Object intercept(Invocation invocation) throws Exception {
@@ -125,7 +125,7 @@ public class SqlPrinter implements Interceptor {
                         }
 
                         // 转换器
-                        for (ValueConverter vc : CONVERTERS) {
+                        for (ValueConverter vc : converters) {
                             value = vc.convert(value);
                         }
 
@@ -159,10 +159,5 @@ public class SqlPrinter implements Interceptor {
             target = Plugin.wrap(target, this);
         }
         return target;
-    }
-
-    @Override
-    public void setProperties(Properties properties) {
-        props = properties;
     }
 }

@@ -48,8 +48,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
-import java.util.ServiceLoader;
 
+import static com.github.dreamroute.sqlprinter.starter.interceptor.ValueConverterCache.CONVERTERS;
 import static java.util.Arrays.stream;
 import static java.util.Optional.ofNullable;
 import static java.util.function.Function.identity;
@@ -82,7 +82,7 @@ public class SqlPrinter implements Interceptor {
     }
 
     private void printSql(Invocation invocation) {
-        String show = props.getProperty("sql-show", "true");
+        String show = props.getProperty("show", "true");
         String filter = props.getProperty("filter");
         Map<String, String> methodNames = stream(ofNullable(filter).orElseGet(String::new).split(",")).collect(toMap(identity(), t -> ""));
         String methodName = null;
@@ -124,9 +124,9 @@ public class SqlPrinter implements Interceptor {
                             value = metaObject.getValue(propertyName);
                         }
 
-                        ServiceLoader<ValueConverter> converters = ServiceLoader.load(ValueConverter.class);
-                        for (ValueConverter converter : converters) {
-                            value = converter.convert(value);
+                        // 转换器
+                        for (ValueConverter vc : CONVERTERS) {
+                            value = vc.convert(value);
                         }
 
                         // 将set中的version减1得到where后面的version的值

@@ -1,6 +1,6 @@
-package com.github.dreamroute.sqlprinter.boot.converters;
+package com.github.dreamroute.sqlprinter.starter.converter.def;
 
-import com.github.dreamroute.mybatis.pro.base.EnumMarker;
+import com.github.dreamroute.mybatis.pro.base.enums.EnumMarker;
 import com.github.dreamroute.sqlprinter.starter.anno.ValueConverter;
 
 /**

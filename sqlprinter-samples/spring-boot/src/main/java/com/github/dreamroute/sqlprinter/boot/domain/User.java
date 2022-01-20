@@ -1,6 +1,6 @@
 package com.github.dreamroute.sqlprinter.boot.domain;
 
-import com.github.dreamroute.mybatis.pro.base.EnumMarker;
+import com.github.dreamroute.mybatis.pro.base.enums.EnumMarker;
 import com.github.dreamroute.mybatis.pro.core.annotations.Id;
 import com.github.dreamroute.mybatis.pro.core.annotations.Table;
 import lombok.AllArgsConstructor;
@@ -33,8 +33,8 @@ public class User {
         MALE(1, "男"),
         FEMALE(2, "女");
 
-        private Integer value;
-        private String desc;
+        private final Integer value;
+        private final String desc;
     }
 
 }

@@ -13,7 +13,7 @@ public class SqlprinterProperties {
     /**
      * 是否显示SQL，默认显示
      */
-    private boolean sqlShow = true;
+    private boolean show = true;
 
     /**
      * 配置不需要打印SQL的mapper方法名

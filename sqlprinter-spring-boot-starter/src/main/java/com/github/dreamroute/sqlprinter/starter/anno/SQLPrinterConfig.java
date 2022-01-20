@@ -26,7 +26,7 @@ public class SQLPrinterConfig {
     public SqlPrinter sqlPrinter() {
         SqlPrinter printer = new SqlPrinter();
         Properties props = new Properties();
-        props.setProperty("sql-show", String.valueOf(sqlprinterProperties.isSqlShow()));
+        props.setProperty("show", String.valueOf(sqlprinterProperties.isShow()));
         String[] filter = ofNullable(sqlprinterProperties.getFilter()).orElseGet(() -> new String[0]);
         String result = join(",", filter);
         props.setProperty("filter", result);

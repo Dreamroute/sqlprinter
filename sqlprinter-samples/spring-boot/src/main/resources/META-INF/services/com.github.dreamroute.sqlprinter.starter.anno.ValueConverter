@@ -1,2 +1,2 @@
-com.github.dreamroute.sqlprinter.boot.converters.DateConverter
-com.github.dreamroute.sqlprinter.boot.converters.EnumConverter
+com.github.dreamroute.sqlprinter.starter.converter.def.DateConverter
+com.github.dreamroute.sqlprinter.starter.converter.def.EnumConverter

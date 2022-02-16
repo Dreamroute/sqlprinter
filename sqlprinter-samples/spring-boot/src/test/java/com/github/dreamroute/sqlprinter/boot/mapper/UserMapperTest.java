@@ -1,18 +1,21 @@
 package com.github.dreamroute.sqlprinter.boot.mapper;
 
 import com.github.dreamroute.sqlprinter.boot.domain.User;
+import com.github.dreamroute.sqlprinter.starter.interceptor.SqlPrinter;
 import com.ninja_squad.dbsetup.DbSetup;
 import com.ninja_squad.dbsetup.Operations;
 import com.ninja_squad.dbsetup.destination.DataSourceDestination;
 import com.ninja_squad.dbsetup.operation.Insert;
+import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.SystemMetaObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import static com.github.dreamroute.sqlprinter.boot.domain.User.Gender.MALE;
@@ -26,11 +29,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest
 class UserMapperTest {
 
-    @Autowired
+    @Resource
     private UserMapper userMapper;
-
     @Resource
     private DataSource dataSource;
+    @Resource
+    private SqlPrinter sqlPrinter;
 
     @BeforeEach
     void beforeEach() {
@@ -76,6 +80,16 @@ class UserMapperTest {
     void selectUserByIdsTest() {
         List<User> users = userMapper.selectUserByIds(newArrayList(1L, 2L));
         System.err.println(users);
+    }
+
+    /**
+     * filter手动设置成空
+     */
+    @Test
+    void filterNullTest() {
+        MetaObject mo = SystemMetaObject.forObject(sqlPrinter);
+        mo.setValue("filter", new HashSet<>());
+        userMapper.selectById(1L, "id", "name");
     }
 
 }

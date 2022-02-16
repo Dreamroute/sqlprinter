@@ -23,7 +23,6 @@
  */
 package com.github.dreamroute.sqlprinter.starter.interceptor;
 
-import cn.hutool.core.collection.ConcurrentHashSet;
 import com.github.dreamroute.sqlprinter.starter.anno.SqlprinterProperties;
 import com.github.dreamroute.sqlprinter.starter.anno.ValueConverter;
 import com.github.dreamroute.sqlprinter.starter.util.PluginUtil;
@@ -36,7 +35,6 @@ import org.apache.ibatis.mapping.ParameterMode;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.plugin.Intercepts;
 import org.apache.ibatis.plugin.Invocation;
-import org.apache.ibatis.plugin.Plugin;
 import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.scripting.defaults.DefaultParameterHandler;
@@ -48,10 +46,11 @@ import org.springframework.context.event.ContextRefreshedEvent;
 
 import java.sql.PreparedStatement;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.google.common.collect.Sets.newConcurrentHashSet;
+import static java.util.Optional.ofNullable;
 
 /**
  * print simple sql
@@ -66,16 +65,14 @@ import static com.google.common.collect.Sets.newConcurrentHashSet;
 public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefreshedEvent> {
 
     private final List<ValueConverter> converters;
-    private Configuration config;
-    private Set<String> filter = new ConcurrentHashSet<>();
+    private final Set<String> filter;
     private final boolean show;
+
+    private Configuration config;
 
     public SqlPrinter(SqlprinterProperties props, List<ValueConverter> converters) {
         this.converters = converters;
-        String[] filter = props.getFilter();
-        if (filter != null && filter.length > 0) {
-            this.filter = newConcurrentHashSet(Arrays.asList(filter));
-        }
+        filter = new HashSet<>(Arrays.asList(ofNullable(props.getFilter()).orElseGet(() -> new String[0])));
         this.show = props.isShow();
     }
 
@@ -88,10 +85,10 @@ public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefre
     @Override
     public Object intercept(Invocation invocation) throws Exception {
 
-        // invoke the original setParameters method
+        // 调用原始方法
         Object result = invocation.proceed();
 
-        // Print the simple SQL
+        // 打印sql
         printSql(invocation);
 
         return result;
@@ -113,7 +110,6 @@ public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefre
 
             List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
             if (parameterMappings != null) {
-                long versionValue = 0;
                 for (ParameterMapping parameterMapping : parameterMappings) {
                     if (parameterMapping.getMode() != ParameterMode.OUT) {
                         Object value;
@@ -134,11 +130,6 @@ public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefre
                             value = vc.convert(value);
                         }
 
-                        // 将set中的version减1得到where后面的version的值
-//                        if (value != null && Objects.equals(propertyName, "version")) {
-//                            versionValue = (long) value - 1;
-//                        }
-
                         // sql中非数字类型的值加单引号
                         if (value != null && !(value instanceof Number)) {
                             value = "'" + value + "'";
@@ -154,13 +145,5 @@ public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefre
                 log.info("\r\n===SQL===={}=======>\r\n{}", name, sb.toString());
             }
         }
-    }
-
-    @Override
-    public Object plugin(Object target) {
-        if (target instanceof ParameterHandler) {
-            target = Plugin.wrap(target, this);
-        }
-        return target;
     }
 }

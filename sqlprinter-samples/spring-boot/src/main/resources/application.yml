@@ -2,6 +2,7 @@ sqlprinter:
   show: true
   filter:
     - com.github.dreamroute.sqlprinter.boot.mapper.UserMapper.selectById
+    - com.github.dreamroute.sqlprinter.boot.mapper.UserMapper.selectByIds
 mybatis:
   mapper-locations: /mapper/*
   type-handlers-package: com.github.dreamroute.mybatis.pro.base.typehandler

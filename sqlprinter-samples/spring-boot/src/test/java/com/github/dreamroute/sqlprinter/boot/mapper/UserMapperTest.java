@@ -64,6 +64,7 @@ class UserMapperTest {
         User user = userMapper.selectById(1L);
         user.setPassword("update");
         userMapper.updateById(user);
+        userMapper.updateByIdExcludeNull(user);
     }
 
     @Test

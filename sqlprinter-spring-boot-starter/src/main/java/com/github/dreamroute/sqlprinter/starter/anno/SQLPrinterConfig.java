@@ -14,10 +14,6 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Properties;
-
-import static java.lang.String.join;
-import static java.util.Optional.ofNullable;
 
 /**
  * 初始化插件配置信息
@@ -44,12 +40,7 @@ public class SQLPrinterConfig implements ApplicationContextAware {
 
     @Bean
     public SqlPrinter sqlPrinter(SqlprinterProperties sqlprinterProperties) {
-        Properties props = new Properties();
-        props.setProperty("show", String.valueOf(sqlprinterProperties.isShow()));
-        String[] filter = ofNullable(sqlprinterProperties.getFilter()).orElseGet(() -> new String[0]);
-        String result = join(",", filter);
-        props.setProperty("filter", result);
-        return new SqlPrinter(props, convs);
+        return new SqlPrinter(sqlprinterProperties, convs);
     }
 
 }

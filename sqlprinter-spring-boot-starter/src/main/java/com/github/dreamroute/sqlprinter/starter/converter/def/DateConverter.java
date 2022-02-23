@@ -14,7 +14,7 @@ public class DateConverter implements ValueConverter {
     @Override
     public Object convert(Object value) {
         if (value instanceof Date) {
-            value = DateUtil.format((Date) value, "yyyy-MM-dd HH:mm:sss.SSS");
+            value = DateUtil.format((Date) value, "yyyy-MM-dd HH:mm:ss.SSS");
         }
         return value;
     }

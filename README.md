@@ -22,9 +22,9 @@
 
 ----------
 ### 使用方式，Spring Boot项目：
-1. 版本2.0.0之后：在启动类上使用@EnableSQLPrinter即可开起（如果生产环境不希望显示sql，在application.yml/properties中配置sqlprinter.show=false即可）
-
-2. 过滤功能：对于有一些sql打印比较频繁，不希望展示在日志中，那么可以在application.yml/properties中配置中配置sqlprinter.filter数组（数组内容就是Mapper接口的方法名），如下：
+1. 版本2.0.0之后：在启动类上使用@EnableSQLPrinter即可开起（如果生产环境不希望显示sql，在application.yml/properties中配置`sqlprinter.show=false`即可）
+2. 是否格式化SQL，默认不格式化，可以配置(`sqlprinter.format = true`)来格式化SQL，对于一些比较特殊的SQL，如果格式化失败，那么会打印未被格式化时的sql，不会抛出异常
+3. 过滤功能：对于有一些sql打印比较频繁，不希望展示在日志中，那么可以在application.yml/properties中配置中配置sqlprinter.filter数组（数组内容就是Mapper接口的方法名），如下：
     ```
     sqlprinter:
       show: true

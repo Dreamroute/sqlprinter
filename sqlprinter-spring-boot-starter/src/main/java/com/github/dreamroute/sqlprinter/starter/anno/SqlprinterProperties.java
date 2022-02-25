@@ -16,6 +16,11 @@ public class SqlprinterProperties {
     private boolean show = true;
 
     /**
+     * 是否格式化SQL，默认不格式化
+     */
+    private boolean format;
+
+    /**
      * 配置不需要打印SQL的mapper方法名
      */
     private String[] filter;

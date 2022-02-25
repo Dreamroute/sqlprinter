@@ -27,6 +27,8 @@ import com.github.dreamroute.sqlprinter.starter.anno.SqlprinterProperties;
 import com.github.dreamroute.sqlprinter.starter.anno.ValueConverter;
 import com.github.dreamroute.sqlprinter.starter.util.PluginUtil;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.jsqlparser.JSQLParserException;
+import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -64,6 +66,7 @@ import static java.util.Optional.ofNullable;
 @Intercepts({@Signature(type = ParameterHandler.class, method = "setParameters", args = {PreparedStatement.class})})
 public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefreshedEvent> {
 
+    private final SqlprinterProperties sqlprinterProperties;
     private final List<ValueConverter> converters;
     private final Set<String> filter;
     private final boolean show;
@@ -71,6 +74,7 @@ public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefre
     private Configuration config;
 
     public SqlPrinter(SqlprinterProperties props, List<ValueConverter> converters) {
+        this.sqlprinterProperties = props;
         this.converters = converters;
         filter = new HashSet<>(Arrays.asList(ofNullable(props.getFilter()).orElseGet(() -> new String[0])));
         this.show = props.isShow();
@@ -142,7 +146,18 @@ public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefre
                 }
                 String[] split = id.split("\\.");
                 String name = split[split.length - 2] + "." + split[split.length - 1];
-                log.info("\r\n===SQL===={}=======>\r\n{}", name, sb.toString());
+
+                String info;
+                if (sqlprinterProperties.isFormat()) {
+                    try {
+                        info = CCJSqlParserUtil.parse(sb.toString()).toString();
+                    } catch (JSQLParserException e) {
+                        info = sb.toString();
+                    }
+                } else {
+                    info = sb.toString();
+                }
+                log.info("\r\n===SQL===={}=======>\r\n{}", name, info);
             }
         }
     }

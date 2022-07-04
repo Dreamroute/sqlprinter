@@ -47,6 +47,7 @@
             <groupId>com.github.dreamroute</groupId>
             <artifactId>mybatis-pro-base</artifactId>
             <version>${mybatis-pro.version}</version>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 

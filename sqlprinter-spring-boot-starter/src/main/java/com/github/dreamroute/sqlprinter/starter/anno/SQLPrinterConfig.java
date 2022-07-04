@@ -9,8 +9,8 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.lang.NonNull;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -27,7 +27,7 @@ public class SQLPrinterConfig implements ApplicationContextAware {
     private final List<ValueConverter> convs = new ArrayList<>();
 
     @Override
-    public void setApplicationContext(@Nonnull ApplicationContext context) throws BeansException {
+    public void setApplicationContext(@NonNull ApplicationContext context) throws BeansException {
         Collection<Object> values = context.getBeansWithAnnotation(EnableSQLPrinter.class).values();
         values.forEach(e -> {
             EnableSQLPrinter annotation = AnnotationUtils.findAnnotation(e.getClass(), EnableSQLPrinter.class);

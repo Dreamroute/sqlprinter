@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author w.dehai
  */
 @SpringBootTest
-@EnableSQLPrinter(format = true, converters = {DateConverter.class, EnumConverter.class})
+@EnableSQLPrinter(converters = {DateConverter.class, EnumConverter.class})
 class UserMapperWithFormatTest {
 
     @Resource
@@ -52,7 +52,7 @@ class UserMapperWithFormatTest {
 
         // 手动设置格式化
         format = sqlprinterProperties.isFormat();
-        sqlprinterProperties.setFormat(true);
+        sqlprinterProperties.setFormat(false);
     }
 
     @AfterEach
@@ -72,7 +72,7 @@ class UserMapperWithFormatTest {
         Appender appender = new Appender(SqlPrinter.class);
         userMapper.insert(user);
         assertNotNull(user.getId());
-        String sql = "INSERT INTO smart_user (birthday, password, gender, name, version) VALUES ('2020-01-01 01:01:10.111', '123456', 1, 'Jaedong', NULL)";
+        String sql = "insert into smart_user(birthday,password,gender,name,version) VALUES ('2020-01-01 01:01:10.111','123456',1,'Jaedong',null)";
         assertTrue(appender.contains(sql));
     }
 
@@ -83,15 +83,15 @@ class UserMapperWithFormatTest {
         Appender appender = new Appender(SqlPrinter.class);
         userMapper.updateById(user);
         userMapper.updateByIdExcludeNull(user);
-        assertTrue(appender.contains("UPDATE smart_user SET birthday = NULL, password = 'update', gender = NULL, name = 'w.dehai', version = 0 WHERE id = 1"));
-        assertTrue(appender.contains(1, "UPDATE smart_user SET password = 'update', name = 'w.dehai', version = 0 WHERE id = 1"));
+        assertTrue(appender.contains("update smart_user set birthday = null,password = 'update',gender = null,name = 'w.dehai',version = 0 where id = 1"));
+        assertTrue(appender.contains(1, "update smart_user set  password = 'update',name = 'w.dehai',version = 0  where id = 1"));
     }
 
     @Test
     void selectUsersTest() {
         Appender appender = new Appender(SqlPrinter.class);
         userMapper.selectUsers();
-        String sql = "SELECT * FROM smart_user";
+        String sql = "select * from smart_user";
         assertTrue(appender.contains(sql));
     }
 
@@ -99,7 +99,12 @@ class UserMapperWithFormatTest {
     void selectUserByIdsTest() {
         Appender appender = new Appender(SqlPrinter.class);
         userMapper.selectUserByIds(newArrayList(1L, 2L));
-        String sql = "SELECT * FROM smart_user WHERE id IN ((1), (2))";
+        String sql = "select * from smart_user where id in\n" +
+                "         (  \n" +
+                "            (1)\n" +
+                "         , \n" +
+                "            (2)\n" +
+                "         )";
         assertTrue(appender.contains(sql));
     }
 

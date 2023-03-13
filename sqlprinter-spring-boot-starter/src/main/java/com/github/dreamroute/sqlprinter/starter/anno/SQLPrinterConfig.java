@@ -31,10 +31,13 @@ public class SQLPrinterConfig implements ApplicationContextAware {
         Collection<Object> values = context.getBeansWithAnnotation(EnableSQLPrinter.class).values();
         values.forEach(e -> {
             EnableSQLPrinter annotation = AnnotationUtils.findAnnotation(e.getClass(), EnableSQLPrinter.class);
+
+            // 转换器
             Class<? extends ValueConverter>[] converters = annotation.converters();
             for (Class<? extends ValueConverter> converter : converters) {
                 convs.add(ReflectUtil.newInstance(converter));
             }
+
         });
     }
 

@@ -68,7 +68,9 @@ class UserMapperTest {
         Appender appender = new Appender(SqlPrinter.class);
         userMapper.insert(user);
         assertNotNull(user.getId());
-        String sql = "insert into smart_user(birthday,password,gender,name,version) VALUES ('" + time + "','123456',1,'Jaedong',null)";
+        String sql =
+                "INSERT INTO smart_user (birthday, password, gender, name, version)\n" +
+                "VALUES ('2020-01-01 01:01:10.111', '123456', 1, 'Jaedong', NULL)";
         assertTrue(appender.contains(sql));
     }
 
@@ -79,31 +81,33 @@ class UserMapperTest {
         Appender appender = new Appender(SqlPrinter.class);
         userMapper.updateById(user);
         userMapper.updateByIdExcludeNull(user);
-        assertTrue(appender.contains("update smart_user set birthday = null,password = 'update',gender = null,name = 'w.dehai',version = 0 where id = 1"));
-        assertTrue(appender.contains(1, "update smart_user set  password = 'update',name = 'w.dehai',version = 0  where id = 1"));
+        assertTrue(appender.contains(
+                "UPDATE smart_user\n" +
+                "SET birthday = NULL, password = 'update', gender = NULL, name = 'w.dehai', version = 0\n" +
+                "WHERE id = 1"));
+        assertTrue(appender.contains(1,
+                "UPDATE smart_user\n" +
+                "SET password = 'update', name = 'w.dehai', version = 0\n" +
+                "WHERE id = 1"));
     }
 
     @Test
     void selectUsersTest() {
         Appender appender = new Appender(SqlPrinter.class);
         userMapper.selectUsers();
-        String sql = "SELECT\n" +
-                "            *\n" +
-                "        FROM\n" +
-                "            smart_user";
-        assertTrue(appender.contains(sql));
+        assertTrue(appender.contains(
+                "SELECT *\n" +
+                "FROM smart_user"));
     }
 
     @Test
     void selectUserByIdsTest() {
         Appender appender = new Appender(SqlPrinter.class);
         userMapper.selectUserByIds(newArrayList(1L, 2L));
-        String sql = "select * from smart_user where id in\n" +
-                "         (  \n" +
-                "            (1)\n" +
-                "         , \n" +
-                "            (2)\n" +
-                "         )";
+        String sql =
+                "SELECT *\n" +
+                "FROM smart_user\n" +
+                "WHERE id IN (1, 2)";
         assertTrue(appender.contains(sql));
     }
 
@@ -116,7 +120,9 @@ class UserMapperTest {
         mo.setValue("filter", new HashSet<>());
         Appender appender = new Appender(SqlPrinter.class);
         userMapper.selectById(1L, "id", "name");
-        String sql = "select id, name from smart_user where id = 1";
+        String sql = "SELECT id, name\n" +
+                "FROM smart_user\n" +
+                "WHERE id = 1";
         assertTrue(appender.contains(sql));
     }
 

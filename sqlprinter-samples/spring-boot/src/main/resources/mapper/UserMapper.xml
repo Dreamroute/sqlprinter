@@ -4,10 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.github.dreamroute.sqlprinter.boot.mapper.UserMapper">
     <select id="selectUsers" resultType="com.github.dreamroute.sqlprinter.boot.domain.User">
-        SELECT
-            *
-        FROM
-            smart_user
+        select * from smart_user
     </select>
 
     <select id="selectUserByIds" resultType="com.github.dreamroute.sqlprinter.boot.domain.User">

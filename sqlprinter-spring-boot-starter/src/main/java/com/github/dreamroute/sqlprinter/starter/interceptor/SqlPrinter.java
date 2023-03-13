@@ -23,12 +23,11 @@
  */
 package com.github.dreamroute.sqlprinter.starter.interceptor;
 
+import com.alibaba.druid.sql.SQLUtils;
 import com.github.dreamroute.sqlprinter.starter.anno.SqlprinterProperties;
 import com.github.dreamroute.sqlprinter.starter.anno.ValueConverter;
 import com.github.dreamroute.sqlprinter.starter.util.PluginUtil;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.jsqlparser.JSQLParserException;
-import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -147,18 +146,29 @@ public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefre
                 String[] split = id.split("\\.");
                 String name = split[split.length - 2] + "." + split[split.length - 1];
 
-                String info;
+                String info = sb.toString();
                 if (sqlprinterProperties.isFormat()) {
-                    try {
-                        info = CCJSqlParserUtil.parse(sb.toString()).toString();
-                    } catch (JSQLParserException e) {
-                        info = sb.toString();
-                    }
-                } else {
-                    info = sb.toString();
+                    info = format(info);
                 }
+
                 log.info("\r\n===SQL===={}=======>\r\n{}", name, info);
             }
+        }
+    }
+
+    /**
+     * 使用druid格式化sql，如果格式化失败，那么返回未经过格式化的sql，增加此格式化的原因是因为：
+     * 1. 为了美观和打印的格式统一
+     * 2. mysql的xml文件编写的sql带有动态标签，如果动态标签不满足条件时sql会有很多多余的换行和缩进
+     *
+     * @param sql 需要格式化的sql
+     * @return 返回格式化之后的sql
+     */
+    private String format(String sql) {
+        try {
+            return SQLUtils.formatMySql(sql);
+        } catch (Exception e) {
+            return sql;
         }
     }
 }

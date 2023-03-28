@@ -21,7 +21,7 @@
 
     <properties>
         <!-- 版本信息 -->
-        <revision>2.3.1-RELEASE</revision>
+        <revision>2.3.2-RELEASE</revision>
 
         <!-- 默认仓库地址 -->
         <repository.url>https://maven.aliyun.com/repository/public</repository.url>
@@ -43,7 +43,7 @@
         <guava.version>31.0.1-jre</guava.version>
         <fastjson.version>1.2.78</fastjson.version>
         <hutool-all.version>5.7.13</hutool-all.version>
-        <mybatis-pro.version>1.6.1</mybatis-pro.version>
+        <mybatis-pro.version>1.6.7</mybatis-pro.version>
         <common-util.version>1.2.6</common-util.version>
         <commons-lang3.version>3.11</commons-lang3.version>
 

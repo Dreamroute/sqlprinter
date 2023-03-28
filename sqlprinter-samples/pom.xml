@@ -16,6 +16,7 @@
     <packaging>pom</packaging>
 
     <dependencies>
+
         <dependency>
             <groupId>com.github.dreamroute</groupId>
             <artifactId>mybatis-pro-boot-starter</artifactId>

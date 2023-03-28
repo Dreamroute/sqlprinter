@@ -11,7 +11,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.3.2.RELEASE</version>
+        <version>2.7.10</version>
     </parent>
 
     <groupId>com.github.dreamroute</groupId>
@@ -21,7 +21,7 @@
 
     <properties>
         <!-- 版本信息 -->
-        <revision>2.3.2-RELEASE</revision>
+        <revision>2.3.3-RELEASE</revision>
 
         <!-- 默认仓库地址 -->
         <repository.url>https://maven.aliyun.com/repository/public</repository.url>
@@ -41,8 +41,9 @@
         <druid.version>1.2.16</druid.version>
         <mybatis.version>3.5.7</mybatis.version>
         <guava.version>31.0.1-jre</guava.version>
-        <fastjson.version>1.2.78</fastjson.version>
+        <fastjson.version>1.2.83</fastjson.version>
         <hutool-all.version>5.7.13</hutool-all.version>
+        <snakeyaml.version>1.33</snakeyaml.version>
         <mybatis-pro.version>1.6.7</mybatis-pro.version>
         <common-util.version>1.2.6</common-util.version>
         <commons-lang3.version>3.11</commons-lang3.version>

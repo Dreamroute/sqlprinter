@@ -42,6 +42,12 @@
         <dependency>
             <groupId>com.github.dreamroute</groupId>
             <artifactId>mybatis-pro-base</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>jackson-databind</artifactId>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -58,8 +64,8 @@
         <dependency>
             <groupId>com.github.dreamroute</groupId>
             <artifactId>common-util</artifactId>
-            <version>${common-util.version}</version>
         </dependency>
+
     </dependencies>
 
     <profiles>

@@ -24,6 +24,7 @@
 ### 使用方式，Spring Boot项目：
 1. 版本2.0.0之后：在启动类上使用@EnableSQLPrinter即可开起（如果生产环境不希望显示sql，在application.yml/properties中配置`sqlprinter.show=false`即可）
 2. 是否格式化SQL，默认不格式化，可以配置(`sqlprinter.format = true`)来格式化SQL，对于一些比较特殊的SQL，如果格式化失败，那么会打印未被格式化时的sql，不会抛出异常
+   > 格式化的好处：1. 系统打印的SQL很整齐，风格一致；2. 由于mybatis使用动态标签，如果不格式化，那么打印的SQL会移除不满足条件的动态标签，显得SQL很凌乱
 3. 过滤功能：对于有一些sql打印比较频繁，不希望展示在日志中，那么可以在application.yml/properties中配置中配置sqlprinter.filter数组（数组内容就是Mapper接口的方法名），如下：
     ```
     sqlprinter:
@@ -44,10 +45,10 @@
 
 ### 2.1. 自定义显示内容
 1. 在插件打印SQL的时候，对于有些特殊数据类型，可能插件默认打印方式不符合你的要求，比如日期类型Date默认打印的就是Date类型
-调用`toString`方法的结果，类似这样`Tue Sep 07 16:25:28 CST 2021`，而你需要的是`2021-09-07 16:25:028.673`，此时如果直接复制sql打印出的sql去数据库执行，很有可能会报错，
-这时你就可以自定义日期类型的打印格式。
-1. 比如对于`Date`参数，希望打印`yyyy-MM-dd HH:mm:ss.SSS`类型的日期
-1. 创建日期转换器类，实现`ValueConverter`接口：
+调用`toString`方法的结果，类似这样`Tue Sep 07 16:25:28 CST 2021`，而你需要的是`2021-09-07 16:25:028.673`，如果从控制台或者日志文件中直接复制带有这种`Tue Sep 07 16:25:28 CST 2021`时间的sql去数据库执行，很有可能会报错，
+这时你就可以自定义日期类型的打印格式，打印成`2021-09-07 16:25:028.673`这种易读并且可以直接用于执行的格式。
+2. 对于`Date`参数，希望打印`yyyy-MM-dd HH:mm:ss.SSS`类型的日期
+3. 创建日期转换器类，实现`ValueConverter`接口：
 ```java
 public class DateConverter implements ValueConverter {
     @Override
@@ -59,11 +60,11 @@ public class DateConverter implements ValueConverter {
     }
 }
 ```
-1. 在`@EnableSQLPrinter`的属性`converters`中加入即可，比如`@EnableSQLPrinter(converters = {DateConverter.class, EnumConverter.class})`
-1. 此时你的属性为`Date`的字段打印的就是`2021-09-07 16:25:028.673`这种格式的了
-1. 已经提供了两个现成的转换工具，你可以直接使用，分别是`日期`和`枚举`值转换工具，在def包下：
+4. 在`@EnableSQLPrinter`的属性`converters`中加入即可，比如`@EnableSQLPrinter(converters = {DateConverter.class, EnumConverter.class})`
+5. 此时你的属性为`Date`的字段打印的就是`2021-09-07 16:25:028.673`这种格式的了
+6. 框架已经内置提供了两个现成的转换工具，你可以直接使用，分别是`日期`和`枚举`值转换工具，如果满足你的需求就用，不满足就自定义，在def包下：
    1. com.github.dreamroute.sqlprinter.starter.converter.def.DateConverter
-   1. com.github.dreamroute.sqlprinter.starter.converter.def.EnumConverter
+   2. com.github.dreamroute.sqlprinter.starter.converter.def.EnumConverter
 
 ### 3.插件说明： ###
 	1. 本插件是为了方便程序员观察真实sql的打印情况(问号'?'已经被真实值替换)，特别是参数较多的sql，很直观清晰，可以直接复制sql在数据库中执行，非常友好。<br>

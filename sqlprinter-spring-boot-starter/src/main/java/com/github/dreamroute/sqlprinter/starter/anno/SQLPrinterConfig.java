@@ -15,8 +15,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static com.github.dreamroute.sqlprinter.starter.anno.DbType.MySQL;
-
 /**
  * 初始化插件配置信息
  *
@@ -27,7 +25,6 @@ import static com.github.dreamroute.sqlprinter.starter.anno.DbType.MySQL;
 public class SQLPrinterConfig implements ApplicationContextAware {
 
     private final List<ValueConverter> convs = new ArrayList<>();
-    private DbType dbType = MySQL;
 
     @Override
     public void setApplicationContext(@NonNull ApplicationContext context) throws BeansException {
@@ -40,17 +37,12 @@ public class SQLPrinterConfig implements ApplicationContextAware {
             for (Class<? extends ValueConverter> converter : converters) {
                 convs.add(ReflectUtil.newInstance(converter));
             }
-
-            // 数据库类型
-            dbType = annotation.dbType();
-
-
         });
     }
 
     @Bean
     public SqlPrinter sqlPrinter(SqlprinterProperties sqlprinterProperties) {
-        return new SqlPrinter(sqlprinterProperties, convs, dbType);
+        return new SqlPrinter(sqlprinterProperties, convs);
     }
 
 }

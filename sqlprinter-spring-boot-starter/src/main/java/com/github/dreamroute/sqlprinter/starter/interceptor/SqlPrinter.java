@@ -38,7 +38,6 @@ import org.apache.ibatis.plugin.Intercepts;
 import org.apache.ibatis.plugin.Invocation;
 import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.reflection.MetaObject;
-import org.apache.ibatis.scripting.defaults.DefaultParameterHandler;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -99,7 +98,7 @@ public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefre
 
     private void printSql(Invocation invocation) {
 
-        ParameterHandler parameterHander = (DefaultParameterHandler) PluginUtil.processTarget(invocation.getTarget());
+        ParameterHandler parameterHander = (ParameterHandler) PluginUtil.processTarget(invocation.getTarget());
         MetaObject handler = config.newMetaObject(parameterHander);
         MappedStatement mappedStatement = (MappedStatement) handler.getValue("mappedStatement");
         String id = mappedStatement.getId();

@@ -24,6 +24,7 @@
 package com.github.dreamroute.sqlprinter.starter.interceptor;
 
 import com.alibaba.druid.sql.SQLUtils;
+import com.github.dreamroute.sqlprinter.starter.anno.DbType;
 import com.github.dreamroute.sqlprinter.starter.anno.SqlprinterProperties;
 import com.github.dreamroute.sqlprinter.starter.anno.ValueConverter;
 import com.github.dreamroute.sqlprinter.starter.util.PluginUtil;
@@ -50,6 +51,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static com.alibaba.druid.sql.SQLUtils.DEFAULT_FORMAT_OPTION;
+import static com.alibaba.druid.sql.SQLUtils.formatMySql;
 import static java.util.Optional.ofNullable;
 
 /**
@@ -68,14 +71,16 @@ public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefre
     private final List<ValueConverter> converters;
     private final Set<String> filter;
     private final boolean show;
+    private final DbType dbType;
 
     private Configuration config;
 
-    public SqlPrinter(SqlprinterProperties props, List<ValueConverter> converters) {
+    public SqlPrinter(SqlprinterProperties props, List<ValueConverter> converters, DbType dbType) {
         this.sqlprinterProperties = props;
         this.converters = converters;
         filter = new HashSet<>(Arrays.asList(ofNullable(props.getFilter()).orElseGet(() -> new String[0])));
         this.show = props.isShow();
+        this.dbType = dbType;
     }
 
     @Override
@@ -165,7 +170,18 @@ public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefre
      */
     private String format(String sql) {
         try {
-            return SQLUtils.formatMySql(sql);
+            switch (dbType) {
+                case MySQL:
+                    return formatMySql(sql);
+                case Oracle:
+                    return SQLUtils.formatOracle(sql);
+                case SqlServer:
+                    return SQLUtils.formatMySql(sql);
+                case PG:
+                    return SQLUtils.formatPGSql(sql, DEFAULT_FORMAT_OPTION);
+                default:
+                    return sql;
+            }
         } catch (Exception e) {
             return sql;
         }

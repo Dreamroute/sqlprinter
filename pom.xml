@@ -25,6 +25,8 @@
 
         <!-- 默认仓库地址 -->
         <repository.url>https://maven.aliyun.com/repository/public</repository.url>
+        <dist.nexus.release>http://nexus.yzw.cn/repository/maven-releases</dist.nexus.release>
+        <dist.nexus.snapshot>http://nexus.yzw.cn/repository/maven-snapshots</dist.nexus.snapshot>
         <dist.oss.release>https://oss.sonatype.org/content/repositories/snapshots</dist.oss.release>
         <dist.oss.snapshot>https://oss.sonatype.org/content/repositories/snapshots</dist.oss.snapshot>
 

@@ -13,4 +13,9 @@
             (#{item})
         </foreach>
     </select>
+
+    <select id="selectUserByName" resultType="com.github.dreamroute.sqlprinter.boot.domain.User">
+        select * from smart_user where name = #{name}
+    </select>
+
 </mapper>

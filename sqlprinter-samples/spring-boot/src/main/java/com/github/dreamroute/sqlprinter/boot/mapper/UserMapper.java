@@ -11,4 +11,6 @@ import java.util.List;
 public interface UserMapper extends BaseMapper<User, Long> {
     List<User> selectUsers();
     List<User> selectUserByIds(List<Long> ids);
+
+    User selectUserByName(String number);
 }

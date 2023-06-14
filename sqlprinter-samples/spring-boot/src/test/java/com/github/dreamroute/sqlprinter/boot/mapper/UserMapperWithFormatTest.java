@@ -126,4 +126,10 @@ class UserMapperWithFormatTest {
         assertTrue(appender.contains(sql));
     }
 
+    @Test
+    void selectUserByNameTest() {
+        User user = userMapper.selectUserByName("w.dehai");
+        assertEquals("w.dehai", user.getName());
+    }
+
 }

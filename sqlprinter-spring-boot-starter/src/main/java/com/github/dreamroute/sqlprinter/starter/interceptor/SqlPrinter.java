@@ -99,7 +99,7 @@ public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefre
 
     private void printSql(Invocation invocation) {
 
-        DefaultParameterHandler parameterHander = (DefaultParameterHandler) PluginUtil.processTarget(invocation.getTarget());
+        ParameterHandler parameterHander = (DefaultParameterHandler) PluginUtil.processTarget(invocation.getTarget());
         MetaObject handler = config.newMetaObject(parameterHander);
         MappedStatement mappedStatement = (MappedStatement) handler.getValue("mappedStatement");
         String id = mappedStatement.getId();

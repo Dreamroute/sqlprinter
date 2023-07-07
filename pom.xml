@@ -44,7 +44,7 @@
         <mybatis.version>3.5.7</mybatis.version>
         <guava.version>31.0.1-jre</guava.version>
         <fastjson.version>1.2.83</fastjson.version>
-        <hutool-all.version>5.7.13</hutool-all.version>
+        <hutool-all.version>5.8.20</hutool-all.version>
         <snakeyaml.version>1.33</snakeyaml.version>
         <mybatis-pro.version>1.6.7</mybatis-pro.version>
         <common-util.version>1.2.6</common-util.version>

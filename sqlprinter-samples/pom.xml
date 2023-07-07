@@ -22,6 +22,11 @@
             <artifactId>mybatis-pro-boot-starter</artifactId>
             <version>${mybatis-pro.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+            <version>10.1.0-M14</version>
+        </dependency>
     </dependencies>
 
 </project>

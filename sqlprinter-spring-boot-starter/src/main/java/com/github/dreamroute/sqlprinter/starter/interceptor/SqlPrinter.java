@@ -142,15 +142,13 @@ public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefre
                         sb.replace(pos, pos + 1, String.valueOf(value));
                     }
                 }
-                String[] split = id.split("\\.");
-                String name = split[split.length - 2] + "." + split[split.length - 1];
 
                 String info = sb.toString();
                 if (sqlprinterProperties.isFormat()) {
                     info = format(info);
                 }
 
-                log.info("\r\n===SQL===={}=======>\r\n{}", name, info);
+                log.info("\r\n=======< {} >=======\r\n{}", id, info);
             }
         }
     }

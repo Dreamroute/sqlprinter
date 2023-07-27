@@ -23,7 +23,7 @@
  */
 package com.github.dreamroute.sqlprinter.starter.interceptor;
 
-import cn.hutool.db.sql.SqlFormatter;
+import com.alibaba.druid.sql.SQLUtils;
 import com.github.dreamroute.sqlprinter.starter.anno.SqlprinterProperties;
 import com.github.dreamroute.sqlprinter.starter.anno.ValueConverter;
 import com.github.dreamroute.sqlprinter.starter.util.PluginUtil;
@@ -163,7 +163,7 @@ public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefre
      */
     private String format(String sql) {
         try {
-            return SqlFormatter.format(sql);
+            return SQLUtils.formatMySql(sql);
         } catch (Exception e) {
             return sql;
         }

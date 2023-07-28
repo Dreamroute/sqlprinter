@@ -24,6 +24,7 @@
 package com.github.dreamroute.sqlprinter.starter.interceptor;
 
 import com.alibaba.druid.sql.SQLUtils;
+import com.alibaba.druid.sql.visitor.VisitorFeature;
 import com.github.dreamroute.sqlprinter.starter.anno.SqlprinterProperties;
 import com.github.dreamroute.sqlprinter.starter.anno.ValueConverter;
 import com.github.dreamroute.sqlprinter.starter.util.PluginUtil;
@@ -163,6 +164,10 @@ public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefre
      */
     private String format(String sql) {
         try {
+            // 此格式化在不改变sql语义的情况下会移除一些括号，比如：
+            // 格式化前：select * from xx where id = (#{id} and name = #{name}) and pwd = #{pwd}
+            // 格式化后：select * from xx where id = #{id} and name = #{name} and pwd = #{pwd}（括号被移除）
+            // 但是如果移除括号会改变sql语义，那就不会被移除
             return SQLUtils.formatMySql(sql);
         } catch (Exception e) {
             return sql;

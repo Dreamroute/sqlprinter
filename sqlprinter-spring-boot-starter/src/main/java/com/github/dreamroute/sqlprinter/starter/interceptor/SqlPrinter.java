@@ -23,17 +23,17 @@
  */
 package com.github.dreamroute.sqlprinter.starter.interceptor;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.druid.sql.SQLUtils;
-import com.alibaba.druid.sql.visitor.VisitorFeature;
 import com.github.dreamroute.sqlprinter.starter.anno.SqlprinterProperties;
 import com.github.dreamroute.sqlprinter.starter.anno.ValueConverter;
-import com.github.dreamroute.sqlprinter.starter.util.PluginUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
-import org.apache.ibatis.mapping.BoundSql;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.ParameterMapping;
-import org.apache.ibatis.mapping.ParameterMode;
+import org.apache.ibatis.executor.resultset.ResultSetHandler;
+import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.plugin.Intercepts;
 import org.apache.ibatis.plugin.Invocation;
@@ -45,11 +45,10 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
+import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.sql.Statement;
+import java.util.*;
 
 import static java.util.Optional.ofNullable;
 
@@ -62,7 +61,12 @@ import static java.util.Optional.ofNullable;
  */
 @Slf4j
 @EnableConfigurationProperties(SqlprinterProperties.class)
-@Intercepts({@Signature(type = ParameterHandler.class, method = "setParameters", args = {PreparedStatement.class})})
+@Intercepts(
+        {
+                @Signature(type = ResultSetHandler.class, method = "handleResultSets", args = {Statement.class}),
+                @Signature(type = ParameterHandler.class, method = "setParameters", args = {PreparedStatement.class})
+        }
+)
 public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefreshedEvent> {
 
     private final SqlprinterProperties sqlprinterProperties;
@@ -91,26 +95,54 @@ public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefre
         // 调用原始方法
         Object result = invocation.proceed();
 
-        // 打印sql
-        printSql(invocation);
+        try {
+            Object target = invocation.getTarget();
+            Parse p = new Parse();
+            // 非查询走这里(非查询不走ResultSetHandler接口，所以放在这里)
+            if (target instanceof ParameterHandler) {
+                MetaObject m = config.newMetaObject(target);
+                MappedStatement ms = (MappedStatement) m.getValue("mappedStatement");
+                SqlCommandType sqlCommandType = ms.getSqlCommandType();
+                if (sqlCommandType != SqlCommandType.SELECT) {
+                    p.id = ms.getId();
+                    extracted(ms.getId(), ms.getBoundSql(m.getValue("parameterObject")), p);
+                }
+            }
+
+            // 查询走这里
+            else {
+                p = getSql(invocation);
+            }
+
+            if (CharSequenceUtil.isNotBlank(p.sql)) {
+                printResult(result, p);
+            }
+        } catch (Exception e) {
+            // print sql is not important, so ignore it.
+        }
 
         return result;
     }
 
-    private void printSql(Invocation invocation) {
+    private Parse getSql(Invocation invocation) {
 
-        ParameterHandler parameterHander = (ParameterHandler) PluginUtil.processTarget(invocation.getTarget());
-        MetaObject handler = config.newMetaObject(parameterHander);
-        MappedStatement mappedStatement = (MappedStatement) handler.getValue("mappedStatement");
+        Parse parse = new Parse();
+
+        MetaObject resultSetHandler = config.newMetaObject(invocation.getTarget());
+        MappedStatement mappedStatement = (MappedStatement) resultSetHandler.getValue("mappedStatement");
         String id = mappedStatement.getId();
+        parse.id = id;
+        BoundSql boundSql = (BoundSql) resultSetHandler.getValue("boundSql");
+        extracted(id, boundSql, parse);
+        return parse;
+    }
 
+    private void extracted(String id, BoundSql boundSql, Parse parse) {
         if (show && !filter.contains(id)) {
-
-            Object parameterObject = parameterHander.getParameterObject();
-            BoundSql boundSql = (BoundSql) handler.getValue("boundSql");
+            
+            Object parameterObject = boundSql.getParameterObject();
             String originalSql = boundSql.getSql();
             StringBuilder sb = new StringBuilder(originalSql);
-
             List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
             if (parameterMappings != null) {
                 for (ParameterMapping parameterMapping : parameterMappings) {
@@ -149,9 +181,65 @@ public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefre
                     info = format(info);
                 }
 
-                log.info("\r\n=======< {} >=======\r\n{}", id, info);
+                parse.sql = info;
             }
         }
+    }
+
+    private void printResult(Object result, Parse parse) {
+        String[] columnNames = null;
+        List<String[]> data = null;
+        if (result instanceof List<?> && CollUtil.isNotEmpty((Collection<?>) result)) {
+            Field[] fields = ReflectUtil.getFields(((List<?>) result).get(0).getClass());
+            if (fields != null && fields.length > 0) {
+                columnNames = generateColumnNames(fields);
+                data = new ArrayList<>(((List<?>) result).size());
+                for (int i = 0; i < ((List<?>) result).size(); i++) {
+                    String[] d = new String[fields.length];
+                    for (int j = 0; j < fields.length; j++) {
+                        Object v = ReflectUtil.getFieldValue(((List<?>) result).get(i), fields[j]);
+                        d[j] = StrUtil.toString(v);
+                    }
+                    data.add(d);
+                }
+            }
+        } else {
+            if (result != null) {
+                Field[] fields = ReflectUtil.getFields(result.getClass());
+                columnNames = generateColumnNames(fields);
+                data = new ArrayList<>(1);
+                for (int i = 0; i < fields.length; i++) {
+                    String[] d = new String[fields.length];
+                    Object v = ReflectUtil.getFieldValue(result, fields[i]);
+                    d[i] = StrUtil.toString(v);
+                    data.add(d);
+                }
+            }
+        }
+
+        String resp = "\r\n\r\n";
+
+        resp += "==> " + parse.id + "\r\n";
+
+        resp += parse.sql + "\r\n";
+
+        if (columnNames != null && columnNames.length > 0 && CollUtil.isNotEmpty(data)) {
+            PrettyTable table = new PrettyTable(columnNames);
+            data.forEach(table::addRow);
+            resp += table;
+        }
+        log.info(resp);
+    }
+
+    private static String[] generateColumnNames(Field[] fields) {
+        String[] columnNames = new String[fields.length];
+        for (int i = 0; i < fields.length; i++) {
+            boolean accessible = fields[i].isAccessible();
+            fields[i].setAccessible(true);
+            columnNames[i] = fields[i].getName();
+            fields[i].setAccessible(accessible);
+        }
+        return columnNames;
     }
 
     /**
@@ -172,5 +260,10 @@ public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefre
         } catch (Exception e) {
             return sql;
         }
+    }
+
+    private static class Parse {
+        String sql;
+        String id;
     }
 }

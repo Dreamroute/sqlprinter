@@ -21,7 +21,7 @@
 
     <properties>
         <!-- 版本信息 -->
-        <revision>2.3.10-RELEASE</revision>
+        <revision>2.3.11-RELEASE</revision>
 
         <!-- 默认仓库地址 -->
         <repository.url>https://maven.aliyun.com/repository/public</repository.url>

@@ -14,7 +14,7 @@
 ```
 
 ----------
-### 最新版本：[点击查看](https://search.maven.org/artifact/com.github.dreamroute/sqlprinter-spring-boot-starter)
+### 最新版本：[点击查看](https://central.sonatype.com/artifact/com.github.dreamroute/sqlprinter-spring-boot-starter)
 
 --------------
 
@@ -36,6 +36,19 @@
         - com.github.dreamroute.sqlprinter.boot.mapper.UserMapper.selectAll
     ```
    那么selectById和selectAll方法就不会打印sql了。
+4. 对于查询sql，显示查询结果，整条效果如下：
+```
+==> com.github.dreamroute.sqlprinter.boot.mapper.UserMapper.selectUserByIds
+SELECT *
+FROM smart_user
+WHERE id IN (1, 2)
+|==========================================================|
+| id | name       | password | version | birthday | gender |
+|==========================================================|
+| 1  | w.dehai    | null     | 0       | null     | null   |
+| 2  | Dreamroute | null     | 0       | null     | null   |
+|==========================================================|
+```
 ----------
 
 ### 2. 效果： ###

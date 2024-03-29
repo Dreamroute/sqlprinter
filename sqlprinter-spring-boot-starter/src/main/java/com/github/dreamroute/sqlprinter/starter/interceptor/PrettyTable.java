@@ -7,9 +7,6 @@ import java.util.stream.Collectors;
 
 /**
  * 控制台打印表格
- *
- * @author zhanjixun
- * @date 2020-07-27 18:05:21
  */
 public class PrettyTable {
     /**

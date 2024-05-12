@@ -203,17 +203,15 @@ public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefre
                     data.add(d);
                 }
             }
-        } else {
-            if (result != null) {
-                Field[] fields = ReflectUtil.getFields(result.getClass());
-                columnNames = generateColumnNames(fields);
-                data = new ArrayList<>(1);
-                for (int i = 0; i < fields.length; i++) {
-                    String[] d = new String[fields.length];
-                    Object v = ReflectUtil.getFieldValue(result, fields[i]);
-                    d[i] = StrUtil.toString(v);
-                    data.add(d);
-                }
+        } else if (!(result instanceof List<?>) && result != null) {
+            Field[] fields = ReflectUtil.getFields(result.getClass());
+            columnNames = generateColumnNames(fields);
+            data = new ArrayList<>(1);
+            for (int i = 0; i < fields.length; i++) {
+                String[] d = new String[fields.length];
+                Object v = ReflectUtil.getFieldValue(result, fields[i]);
+                d[i] = StrUtil.toString(v);
+                data.add(d);
             }
         }
 

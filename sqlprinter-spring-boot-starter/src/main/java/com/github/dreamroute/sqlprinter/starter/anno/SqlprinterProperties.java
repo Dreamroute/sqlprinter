@@ -16,6 +16,11 @@ public class SqlprinterProperties {
     private boolean show = true;
 
     /**
+     * 是否显示查询结果表格
+     */
+    private boolean showResult = true;
+
+    /**
      * 是否格式化SQL，默认格式化
      */
     private boolean format = true;

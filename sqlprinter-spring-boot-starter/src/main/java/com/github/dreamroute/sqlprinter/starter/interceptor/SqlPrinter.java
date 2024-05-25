@@ -73,6 +73,7 @@ public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefre
     private final List<ValueConverter> converters;
     private final Set<String> filter;
     private final boolean show;
+    private final boolean showResult;
 
     private Configuration config;
 
@@ -81,6 +82,7 @@ public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefre
         this.converters = converters;
         filter = new HashSet<>(Arrays.asList(ofNullable(props.getFilter()).orElseGet(() -> new String[0])));
         this.show = props.isShow();
+        this.showResult = props.isShowResult();
     }
 
     @Override
@@ -105,7 +107,7 @@ public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefre
                 SqlCommandType sqlCommandType = ms.getSqlCommandType();
                 if (sqlCommandType != SqlCommandType.SELECT) {
                     p.id = ms.getId();
-                    extracted(ms.getId(), ms.getBoundSql(m.getValue("parameterObject")), p);
+                    processSql(ms.getId(), ms.getBoundSql(m.getValue("parameterObject")), p);
                 }
             }
 
@@ -133,11 +135,11 @@ public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefre
         String id = mappedStatement.getId();
         parse.id = id;
         BoundSql boundSql = (BoundSql) resultSetHandler.getValue("boundSql");
-        extracted(id, boundSql, parse);
+        processSql(id, boundSql, parse);
         return parse;
     }
 
-    private void extracted(String id, BoundSql boundSql, Parse parse) {
+    private void processSql(String id, BoundSql boundSql, Parse parse) {
         if (show && !filter.contains(id)) {
             
             Object parameterObject = boundSql.getParameterObject();
@@ -187,39 +189,40 @@ public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefre
     }
 
     private void printResult(Object result, Parse parse) {
+
+        String resp = "\r\n\r\n";
+        resp += "==> " + parse.id + "\r\n";
+        resp += parse.sql + "\r\n";
+
         String[] columnNames = null;
         List<String[]> data = null;
-        if (result instanceof List<?> && CollUtil.isNotEmpty((Collection<?>) result)) {
-            Field[] fields = ReflectUtil.getFields(((List<?>) result).get(0).getClass());
-            if (fields != null && fields.length > 0) {
-                columnNames = generateColumnNames(fields);
-                data = new ArrayList<>(((List<?>) result).size());
-                for (int i = 0; i < ((List<?>) result).size(); i++) {
-                    String[] d = new String[fields.length];
-                    for (int j = 0; j < fields.length; j++) {
-                        Object v = ReflectUtil.getFieldValue(((List<?>) result).get(i), fields[j]);
-                        d[j] = StrUtil.toString(v);
+        if (showResult) {
+            if (result instanceof List<?> && CollUtil.isNotEmpty((Collection<?>) result)) {
+                Field[] fields = ReflectUtil.getFields(((List<?>) result).get(0).getClass());
+                if (fields != null && fields.length > 0) {
+                    columnNames = generateColumnNames(fields);
+                    data = new ArrayList<>(((List<?>) result).size());
+                    for (int i = 0; i < ((List<?>) result).size(); i++) {
+                        String[] d = new String[fields.length];
+                        for (int j = 0; j < fields.length; j++) {
+                            Object v = ReflectUtil.getFieldValue(((List<?>) result).get(i), fields[j]);
+                            d[j] = StrUtil.toString(v);
+                        }
+                        data.add(d);
                     }
+                }
+            } else if (!(result instanceof List<?>) && result != null) {
+                Field[] fields = ReflectUtil.getFields(result.getClass());
+                columnNames = generateColumnNames(fields);
+                data = new ArrayList<>(1);
+                for (int i = 0; i < fields.length; i++) {
+                    String[] d = new String[fields.length];
+                    Object v = ReflectUtil.getFieldValue(result, fields[i]);
+                    d[i] = StrUtil.toString(v);
                     data.add(d);
                 }
             }
-        } else if (!(result instanceof List<?>) && result != null) {
-            Field[] fields = ReflectUtil.getFields(result.getClass());
-            columnNames = generateColumnNames(fields);
-            data = new ArrayList<>(1);
-            for (int i = 0; i < fields.length; i++) {
-                String[] d = new String[fields.length];
-                Object v = ReflectUtil.getFieldValue(result, fields[i]);
-                d[i] = StrUtil.toString(v);
-                data.add(d);
-            }
         }
-
-        String resp = "\r\n\r\n";
-
-        resp += "==> " + parse.id + "\r\n";
-
-        resp += parse.sql + "\r\n";
 
         if (columnNames != null && columnNames.length > 0 && CollUtil.isNotEmpty(data)) {
             PrettyTable table = new PrettyTable(columnNames);

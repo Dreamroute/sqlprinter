@@ -66,14 +66,12 @@
 
     <dependencyManagement>
         <dependencies>
-
             <dependency>
                 <groupId>com.h2database</groupId>
                 <artifactId>h2</artifactId>
                 <version>1.4.200</version>
                 <scope>test</scope>
             </dependency>
-
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
@@ -106,7 +104,6 @@
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool-all.version}</version>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
 
@@ -267,5 +264,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

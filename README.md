@@ -21,6 +21,23 @@
 > 描述：本插件主要是为了解决输出的sql中参数是问号'?'形式不易观察，而使用真实值替换掉问号'?'。生产环境如果不需要此插件（设置成false即可）。<br>
 > 如果应用中使用了mybatis plus，那么打印sql没问题，但是格式化可能不成功，不影响业务，这是由于mybatis plus操蛋的改动了mybatis的插件接口
 
+------------
+### 兼容性
+如果你项目中使用了类似`mybatis plus`这种框架，优先使用mybatis plus依赖的mybatis，排除本插件的依赖，如下：
+```xml
+<dependency>
+   <groupId>com.github.dreamroute</groupId>
+   <artifactId>sqlprinter-spring-boot-starter</artifactId>
+   <version>xxx.version</version>
+   <exclusions>
+       <exclusion>
+           <artifactId>mybatis</artifactId>
+           <groupId>org.mybatis</groupId>
+       </exclusion>
+   </exclusions>
+</dependency>
+```
+
 ----------
 ### 使用方式，Spring Boot项目：
 1. 版本2.0.0之后：在启动类上使用@EnableSQLPrinter即可开起（如果生产环境不希望显示sql，在application.yml/properties中配置`sqlprinter.show=false`即可）

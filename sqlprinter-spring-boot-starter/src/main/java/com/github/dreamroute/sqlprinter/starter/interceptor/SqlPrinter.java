@@ -206,6 +206,9 @@ public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefre
                         String[] d = new String[fields.length];
                         for (int j = 0; j < fields.length; j++) {
                             Object v = ReflectUtil.getFieldValue(((List<?>) result).get(i), fields[j]);
+                            for (ValueConverter vc : converters) {
+                                v = vc.convert(v);
+                            }
                             d[j] = StrUtil.toString(v);
                         }
                         data.add(d);
@@ -218,6 +221,9 @@ public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefre
                 for (int i = 0; i < fields.length; i++) {
                     String[] d = new String[fields.length];
                     Object v = ReflectUtil.getFieldValue(result, fields[i]);
+                    for (ValueConverter vc : converters) {
+                        v = vc.convert(v);
+                    }
                     d[i] = StrUtil.toString(v);
                     data.add(d);
                 }

@@ -21,6 +21,11 @@ public class SqlprinterProperties {
     private boolean showResult = true;
 
     /**
+     * 结果表格中不打印的字段, 默认全部打印
+     */
+    private String[] showResultExclude = {}; 
+
+    /**
      * 是否格式化SQL，默认格式化
      */
     private boolean format = true;

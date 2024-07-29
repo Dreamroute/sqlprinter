@@ -4,6 +4,7 @@ sqlprinter:
     - com.github.dreamroute.sqlprinter.boot.mapper.UserMapper.selectById
     - com.github.dreamroute.sqlprinter.boot.mapper.UserMapper.selectByIds
   show-result: true
+  show-result-exclude: password, version
 mybatis:
   mapper-locations: /mapper/*
   type-handlers-package: com.github.dreamroute.mybatis.pro.base.typehandler

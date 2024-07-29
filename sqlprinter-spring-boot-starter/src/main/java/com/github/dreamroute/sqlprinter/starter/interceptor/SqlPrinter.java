@@ -25,6 +25,7 @@ package com.github.dreamroute.sqlprinter.starter.interceptor;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.druid.sql.SQLUtils;
@@ -74,6 +75,7 @@ public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefre
     private final Set<String> filter;
     private final boolean show;
     private final boolean showResult;
+    private final String[] showResultExclude;
 
     private Configuration config;
 
@@ -83,6 +85,7 @@ public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefre
         filter = new HashSet<>(Arrays.asList(ofNullable(props.getFilter()).orElseGet(() -> new String[0])));
         this.show = props.isShow();
         this.showResult = props.isShowResult();
+        this.showResultExclude = props.getShowResultExclude();
     }
 
     @Override
@@ -199,6 +202,7 @@ public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefre
         if (showResult) {
             if (result instanceof List<?> && CollUtil.isNotEmpty((Collection<?>) result)) {
                 Field[] fields = ReflectUtil.getFields(((List<?>) result).get(0).getClass());
+                fields = filterExclude(fields);
                 if (fields != null && fields.length > 0) {
                     columnNames = generateColumnNames(fields);
                     data = new ArrayList<>(((List<?>) result).size());
@@ -216,6 +220,7 @@ public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefre
                 }
             } else if (!(result instanceof List<?>) && result != null) {
                 Field[] fields = ReflectUtil.getFields(result.getClass());
+                fields = filterExclude(fields);
                 columnNames = generateColumnNames(fields);
                 data = new ArrayList<>(1);
                 for (int i = 0; i < fields.length; i++) {
@@ -236,6 +241,13 @@ public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefre
             resp += table;
         }
         log.info(resp);
+    }
+
+    private Field[] filterExclude(Field[] fields) {
+        if (showResultExclude != null && showResultExclude.length > 0) {
+            return Arrays.stream(fields).filter(field -> !ArrayUtil.contains(showResultExclude, field.getName())).toArray(Field[]::new);
+        }
+        return fields;
     }
 
     private static String[] generateColumnNames(Field[] fields) {

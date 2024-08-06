@@ -103,7 +103,7 @@ public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefre
         try {
             Object target = invocation.getTarget();
             Parse p = new Parse();
-            // 非查询走这里(非查询不走ResultSetHandler接口，所以放在这里)
+            // 非查询走这里(非查询不走ResultSetHandler接口，所以放在这里, 直接打印sql)
             if (target instanceof ParameterHandler) {
                 MetaObject m = config.newMetaObject(target);
                 MappedStatement ms = (MappedStatement) m.getValue("mappedStatement");
@@ -112,9 +112,13 @@ public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefre
                     p.id = ms.getId();
                     processSql(ms.getId(), ms.getBoundSql(m.getValue("parameterObject")), p);
                 }
+                // 对于((PreparedStatement) countStmt).execute()这种方式执行的sql, 不会走ResultSetHandler拦截, 所以不会走下方的查询逻辑, 因此打印sql放在这里, 而分页插件就包含((PreparedStatement) countStmt).execute()这种查询
+                else if(ms.getId().contains("分页统计")) {
+                    p = getSql(invocation);
+                }
             }
 
-            // 查询走这里
+            // 查询走这里, 这里会生成sql 
             else {
                 p = getSql(invocation);
             }

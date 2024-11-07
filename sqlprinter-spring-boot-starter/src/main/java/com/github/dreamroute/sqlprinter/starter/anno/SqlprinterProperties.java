@@ -18,7 +18,7 @@ public class SqlprinterProperties {
     /**
      * 是否显示查询结果表格
      */
-    private boolean showResult = true;
+    private boolean showResult = false;
 
     /**
      * 结果表格中不打印的字段, 默认全部打印

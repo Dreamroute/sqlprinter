@@ -174,8 +174,8 @@ public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefre
                             value = vc.convert(value);
                         }
 
-                        // sql中非数字类型的值加单引号
-                        if (value != null && !(value instanceof Number)) {
+                        // sql中非数字类型和boolean类型的值加单引号
+                        if (value != null && !(value instanceof Number) && !(value instanceof Boolean)) {
                             value = "'" + value + "'";
                         }
 

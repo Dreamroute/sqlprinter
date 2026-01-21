@@ -79,6 +79,9 @@ public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefre
 
     private Configuration config;
 
+    // 带有xml header的xml,druid格式化会报错, 所以这里就不去格式化
+    private static final String XML_HEADER = "<?xml";
+
     public SqlPrinter(SqlprinterProperties props, List<ValueConverter> converters) {
         this.sqlprinterProperties = props;
         this.converters = converters;
@@ -186,7 +189,7 @@ public class SqlPrinter implements Interceptor, ApplicationListener<ContextRefre
                 }
 
                 String info = sb.toString();
-                if (sqlprinterProperties.isFormat()) {
+                if (sqlprinterProperties.isFormat() && !info.contains(XML_HEADER)) {
                     info = format(info);
                 }
 
